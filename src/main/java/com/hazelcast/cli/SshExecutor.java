@@ -15,23 +15,36 @@ import java.util.Properties;
  */
 public class SshExecutor {
 
-    public static String exec(String user, String host, int port, String command, boolean breakProcess) throws Exception{
+    public static String exec(String user, String host, int port, String command, boolean breakProcess) throws Exception {
 
+        System.out.println("user " + user + " host " + host + " port " + port + " command " + command);
         Session session = null;
         ChannelExec channel = null;
 
         try {
+            Properties config = new Properties();
+            config.put("StrictHostKeyChecking", "no");
+
             JSch jsch = new JSch();
             jsch.addIdentity("~/.ssh/id_rsa");
-            session = jsch.getSession(user, host, port);
-            Properties config = new Properties();
+            jsch.setConfig(config);
+//            jsch.setKnownHosts("~/.ssh/known_hosts");
 
-            config.put("StrictHostKeyChecking", "no");
+            session = jsch.getSession(user, host, port);
+
             session.setConfig(config);
+
+
+//            //Password and fingerprint will be given via UserInfo interface.
+//            UserInfo ui = new UserInfoImpl(pwd, fingerPrint);
+//            session.setUserInfo(ui);
+
             session.connect();
 
             channel = (ChannelExec) session.openChannel("exec");
             BufferedReader in = new BufferedReader(new InputStreamReader(channel.getInputStream()));
+
+            //Executes the command given
             channel.setCommand(command);
             channel.connect();
 
@@ -39,6 +52,8 @@ public class SshExecutor {
             String out = null;
             while ((msg = in.readLine()) != null) {
                 out = msg;
+                //How does the breakProcess work?
+                //Is the first msg the PID? How do we make sure that?
                 if (breakProcess) {
                     break;
                 }

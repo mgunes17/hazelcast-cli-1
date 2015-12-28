@@ -17,7 +17,7 @@ public class CLI {
 
     public static void main(String[] args) throws Exception {
 
-        String userHome=System.getProperty("user.home");
+        //Setting options for the command
         OptionParser optionParser = new OptionParser();
         OptionSpec install = optionParser.accepts("install", "Install hz");
         OptionSpec start = optionParser.accepts("start", "Start hz");
@@ -30,7 +30,10 @@ public class CLI {
 
         OptionSet result = optionParser.parse(args);
 
+        //Building the user and other properties
+        System.out.println("hostName: " + result.valueOf(hostName));
         String host = (String) result.valueOf(hostName);
+        String userHome = System.getProperty("user.home");
         Properties properties = getProperties(userHome);
         String user = properties.getProperty(host + ".user");
         String hostIp = properties.getProperty(host + ".ip");
@@ -38,23 +41,53 @@ public class CLI {
 
         CommandBuilder commandBuilder = new CommandBuilder();
 
+        //executing the command
         if (result.has(install)) {
-            if (!result.has(version)) {
-                System.out.println("--version required");
-                System.exit(-1);
-            }
-            String strVersion = (String) result.valueOf(version);
-            String command = commandBuilder.wget(strVersion);
-            System.out.println("Download started...");
-            String output = SshExecutor.exec(user, hostIp,
-                    port, command, false);
-            System.out.println("Extracting...");
-            String extractCommand = commandBuilder.extract();
-            SshExecutor.exec(user, hostIp, port, extractCommand, false);
 
-            String move = commandBuilder.move("hazelcast-" + strVersion, "hazelcast");
-            SshExecutor.exec(user, hostIp, port, move, false);
-            System.out.println("Installation completed...");
+            //Localhost
+            if((host.equals("localhost"))){
+                System.out.println("Working at localhost");
+                if (!result.has(version)) {
+                    System.out.println("--version required");
+                    System.exit(-1);
+                }
+                String strVersion = (String) result.valueOf(version);
+
+                String installCommand = commandBuilder.wget(strVersion);
+                System.out.println("downloadCommand " + installCommand);
+                System.out.println("Download started...");
+                String installOutput = LocalExecutor.exec(installCommand, false);
+                System.out.println("installOutput: " + installOutput);
+
+                System.out.println("Extracting...");
+                String extractCommand = commandBuilder.extract();
+                String extractOutput = LocalExecutor.exec(extractCommand, false);
+                System.out.println("extractOutput: " + extractOutput);
+
+                String move = commandBuilder.move("hazelcast-" + strVersion, "hazelcast");
+                LocalExecutor.exec(move, false);
+                System.out.println("Installation completed...");
+            }
+            //Remotehost
+            else {
+                if (!result.has(version)) {
+                    System.out.println("--version required");
+                    System.exit(-1);
+                }
+                String strVersion = (String) result.valueOf(version);
+                String command = commandBuilder.wget(strVersion);
+                System.out.println("downloadCommand " + command);
+                System.out.println("Download started...");
+                String output = SshExecutor.exec(user, hostIp,
+                        port, command, false);
+                System.out.println("Extracting...");
+                String extractCommand = commandBuilder.extract();
+                SshExecutor.exec(user, hostIp, port, extractCommand, false);
+
+                String move = commandBuilder.move("hazelcast-" + strVersion, "hazelcast");
+                SshExecutor.exec(user, hostIp, port, move, false);
+                System.out.println("Installation completed...");
+            }
 
         } else if (result.has(start)) {
             String clusterName = (String) result.valueOf(optionClusterName);
@@ -65,11 +98,14 @@ public class CLI {
             Runtime.getRuntime().exec(cmd);
             System.out.println("Upload completed.");
             System.out.println("Starting instance...");
-            String startCmd = commandBuilder.start("hazelcast-" + nodeName + ".xml");
+            String startCmd = commandBuilder.start("~/hazelcast-" + nodeName + ".xml");
+
+            //returns the pid, but how?
             String pid = SshExecutor.exec(user, hostIp, port, startCmd, true);
             System.out.println("Instance started : " + pid);
 
         } else if(result.has(startMC)) {
+            //how does commandBuilder.startMC() know the full path?
             SshExecutor.exec(user, hostIp, port, commandBuilder.startMC(), false);
         }
     }
@@ -81,11 +117,11 @@ public class CLI {
 
         try {
 
-            String filename = "cli.properties";
+            String filename = "/hazelcast/hazelcast-cli/src/main/resources/cli.properties";
 //            input = CLI.class.getClassLoader().getResourceAsStream(filename);
             //load a properties file from class path, inside static method
 
-            prop.load(new InputStreamReader(new FileInputStream(userHome+"/cli.properties")));
+            prop.load(new InputStreamReader(new FileInputStream(userHome+filename)));
             return prop;
 
         } catch (IOException ex) {
