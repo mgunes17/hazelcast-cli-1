@@ -4,11 +4,14 @@ import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Properties;
+
+import org.apache.commons.io.FileUtils;
 
 /**
  * Created by emrah on 12/06/15.
@@ -17,16 +20,26 @@ public class CLI {
 
     public static void main(String[] args) throws Exception {
 
-        //Setting options for the command
+
         OptionParser optionParser = new OptionParser();
+
+        //Setting operations for the command
         OptionSpec install = optionParser.accepts("install", "Install hz");
         OptionSpec start = optionParser.accepts("start", "Start hz");
         OptionSpec startMC = optionParser.accepts("startMC", "Start hz mancenter");
         OptionSpec hostName = optionParser.accepts("hostname").withRequiredArg().ofType(String.class).required();
         OptionSpec version = optionParser.accepts("version").withRequiredArg().ofType(String.class);
+
+        //Options of operations
         OptionSpec optionClusterName = optionParser.accepts("clustername").withRequiredArg().ofType(String.class);
         OptionSpec optionNodeName = optionParser.accepts("nodename").withRequiredArg().ofType(String.class);
         OptionSpec optionConfigFile = optionParser.accepts("configfile").withRequiredArg().ofType(String.class);
+        OptionSpec optionGroupName = optionParser.accepts("g", "groupname").withRequiredArg().ofType(String.class);
+        OptionSpec optionPassword = optionParser.accepts("P", "password").withRequiredArg().ofType(String.class);
+        OptionSpec optionPort = optionParser.accepts("p", "port").withRequiredArg().ofType(String.class);
+
+        //Options for cluster operations
+        OptionSpec shutdown = optionParser.accepts("shutdown");
 
         OptionSet result = optionParser.parse(args);
 
@@ -64,7 +77,7 @@ public class CLI {
                 String extractOutput = LocalExecutor.exec(extractCommand, false);
                 System.out.println("extractOutput: " + extractOutput);
 
-                String move = commandBuilder.move("hazelcast-" + strVersion, "hazelcast");
+                String move = commandBuilder.move("hazelcast-" + strVersion, "hazelcast-deneme");
                 LocalExecutor.exec(move, false);
                 System.out.println("Installation completed...");
             }
@@ -93,20 +106,52 @@ public class CLI {
             String clusterName = (String) result.valueOf(optionClusterName);
             String nodeName = (String) result.valueOf(optionNodeName);
             String configFile = (String) result.valueOf(optionConfigFile);
+            System.out.println("Configfile: " + configFile);
             String cmd = commandBuilder.upload(user, hostIp, nodeName, configFile);
-            System.out.println("Uploading config file...");
+            System.out.println("Uploading config file... " + cmd);
             Runtime.getRuntime().exec(cmd);
+//            FileUtils.copyFileToDirectory(new File("/Users/mefeakengin/hazelcast/hazelcast.xml"), new File("ubuntu@54.84.254.202:/home/ubuntu/hazelcast-altunizade.xml"));
             System.out.println("Upload completed.");
             System.out.println("Starting instance...");
-            String startCmd = commandBuilder.start("~/hazelcast-" + nodeName + ".xml");
+            String startCmd = commandBuilder.start("/home/ubuntu" + "/hazelcast-" + nodeName + ".xml");
 
-            //returns the pid, but how?
+            //TODO: returns the pid, but how?
+            //TODO: can I assume that java is already installed to Amazon EC2
             String pid = SshExecutor.exec(user, hostIp, port, startCmd, true);
             System.out.println("Instance started : " + pid);
 
         } else if(result.has(startMC)) {
             //how does commandBuilder.startMC() know the full path?
             SshExecutor.exec(user, hostIp, port, commandBuilder.startMC(), false);
+
+        } else if (result.has(shutdown)) {
+            String groupName;
+            if(result.has(optionGroupName)) {
+                groupName = (String) result.valueOf(optionGroupName);
+            } else {
+                groupName = "dev";
+                System.out.println("Group name is not specified, default group name is set to: " + groupName);
+            }
+
+            String password;
+            if(result.has(optionGroupName)) {
+                password = (String) result.valueOf(optionPassword);
+            } else {
+                password = "dev-pass";
+                System.out.println("Group name is not specified, default password is set to: " + password);
+            }
+
+            String clusterPort;
+            if(result.has(optionGroupName)) {
+                clusterPort = (String) result.valueOf(optionPassword);
+            } else {
+                clusterPort = "5701";
+                System.out.println("Group name is not specified, default clusterPort is set to: " + clusterPort);
+            }
+
+            String shutdownCmd = commandBuilder.shutdown(hostIp, clusterPort, groupName, password);
+
+            SshExecutor.exec(user, hostIp, port, shutdownCmd, false);
         }
     }
 

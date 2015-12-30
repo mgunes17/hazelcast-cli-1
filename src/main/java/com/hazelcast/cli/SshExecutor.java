@@ -8,6 +8,7 @@ import com.jcraft.jsch.Session;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.channels.Channel;
 import java.util.Properties;
 
 /**
@@ -26,26 +27,20 @@ public class SshExecutor {
             config.put("StrictHostKeyChecking", "no");
 
             JSch jsch = new JSch();
-            jsch.addIdentity("~/.ssh/id_rsa");
+//            jsch.setKnownHosts("/Users/mefeakengin/.ssh/known_hosts");
+            jsch.addIdentity("/Users/mefeakengin/.ssh/id_rsa");
+//            jsch.addIdentity("/Users/mefeakengin/.ssh/aws_rsa");
             jsch.setConfig(config);
-//            jsch.setKnownHosts("~/.ssh/known_hosts");
-
             session = jsch.getSession(user, host, port);
-
             session.setConfig(config);
-
-
-//            //Password and fingerprint will be given via UserInfo interface.
-//            UserInfo ui = new UserInfoImpl(pwd, fingerPrint);
-//            session.setUserInfo(ui);
-
+//            session.setTimeout(10000000);
             session.connect();
 
             channel = (ChannelExec) session.openChannel("exec");
             BufferedReader in = new BufferedReader(new InputStreamReader(channel.getInputStream()));
 
             //Executes the command given
-            channel.setCommand(command);
+            ((ChannelExec) channel).setCommand(command);
             channel.connect();
 
             String msg = null;
