@@ -1,1 +1,0 @@
-java -cp /usr/local/Cellar/hazelcast-cli/1.0/libexec/hazelcast-cli-1.0-SNAPSHOT.jar:/usr/local/Cellar/hazelcast-cli/1.0/libexec/lib/* com.hazelcast.cli.CLI "$@"
