@@ -42,6 +42,12 @@ public class CLITest {
     }
 
     @Test
+    public void shellTest() throws Exception {
+        String[] args1 = {"--install"};
+        CLI.main(args1);
+    }
+
+    @Test
     public void installTest() throws Exception {
         String[] args1 = {"hazelcast", "--install", "--hostName", "efe", "--version", "3.5.4"};
         CLI.main(args1);

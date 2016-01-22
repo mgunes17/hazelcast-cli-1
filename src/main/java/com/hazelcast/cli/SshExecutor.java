@@ -2,10 +2,7 @@ package com.hazelcast.cli;
 
 import com.jcraft.jsch.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.channels.Channel;
 import java.util.Properties;
 
@@ -14,9 +11,9 @@ import java.util.Properties;
  */
 public class SshExecutor {
 
-    public static SshReturn exec(String user, String host, int port, String command, boolean breakProcess, String identityPath) throws Exception {
+    public static String exec(String user, String host, int port, String command, boolean breakProcess, String identityPath) throws Exception {
 
-        System.out.println("user " + user + " host " + host + " port " + port + " command " + command);
+        System.out.println("user " + user + " host " + host + " port " + port + " identity path " + identityPath + " command " + command);
         Session session = null;
         ChannelExec channel = null;
         String msg = null;
@@ -33,23 +30,6 @@ public class SshExecutor {
             session.connect();
 
             int lineCounter = 0;
-
-//            if(path != null) {
-//                ChannelSftp sftp = (ChannelSftp) session.openChannel("sftp");
-//                sftp.connect();
-//                System.out.println("PWD " + sftp.pwd());
-//                InputStream stream = sftp.get(path);
-//                try {
-//                    BufferedReader br = new BufferedReader(new InputStreamReader(stream));
-//                    String line;
-//                    while ((line = br.readLine()) != null) {
-//                        lineCounter++;
-//                    }
-//                } finally {
-//                    System.out.println("line counter: " + lineCounter);
-//                    stream.close();
-//                }
-//            }
 
             channel = (ChannelExec) session.openChannel("exec");
             channel.setPty(false);
@@ -70,10 +50,14 @@ public class SshExecutor {
                 }
             }
 
-            return new SshReturn(msg, lineCounter);
+            return msg;
 
+        } catch (FileNotFoundException e) {
+            System.out.println("Identity file " + identityPath +  " not found");
+            return "exception";
         } catch (Exception e) {
-            throw e;
+            e.printStackTrace();
+            return "exception";
         } finally {
             if (channel != null)
             channel.disconnect();
