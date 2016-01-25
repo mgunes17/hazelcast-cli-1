@@ -3,78 +3,89 @@ package com.hazelcast.cli;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 
+import java.util.Set;
 
 public class CommandInstall {
 
-    public static void apply (OptionSet result, ClusterSettings properties) throws Exception {
+    public static void apply (OptionSet result, Set<MachineSettings> machines) throws Exception {
 
-        if(!properties.isConnectedToMachine) {
-            System.out.println("Please first connect to a machine by typing " +
-                    "--connect-machine --user <user> --ip <ip> --remote-path <absolute path for hazelcast> --identity-path <password path>.");
+//        if(!properties.isConnectedToMachine) {
+//            System.out.println("Please first connect to a machine by typing " +
+//                    "--connect-machine --user <user> --ip <ip> --remote-path <absolute path for hazelcast> --identity-path <password path>.");
+//            return;
+//        }
+
+        MachineSettings machine = MachineSettings.getMachine(result, machines);
+
+        if (machine == null) {
+            System.out.println("Please try again to start a member.");
             return;
         }
 
-        String user = properties.user;
-        String hostIp = properties.hostIp;
-        int port = properties.port;
-        String remotePath = properties.remotePath;
-        String localPath = properties.localPath;
-        String identityPath = properties.identityPath;
+        try {
+            String user = machine.userName;
+            String hostIp = machine.hostIp;
+            int port = machine.sshPort;
+            String remotePath = machine.remotePath;
+            String identityPath = machine.identityPath;
 
-        OptionSpec version = com.hazelcast.cli.CommandOptions.version;
+            OptionSpec version = com.hazelcast.cli.CommandOptions.version;
 
 //            //Localhost
-//            //TODO: Don't loose time with this
-        if ((properties.hostIp.equals("localhost") || properties.hostIp.equals("127.0.0.1"))) {
-            System.out.println("Working at localhost");
-            if (!result.has(version)) {
-                System.out.println("--version required");
+//            //TODO: Don't loose time with this. Localhost is not working yet.
+            if ((hostIp.equals("localhost") || hostIp.equals("127.0.0.1"))) {
+                System.out.println("Working at localhost");
+                if (!result.has(version)) {
+                    System.out.println("--version required");
+                }
+                String strVersion = (String) result.valueOf(version);
+
+                String installCommand = buildCommandDownload(strVersion, remotePath);
+                System.out.println("downloadCommand " + installCommand);
+                System.out.println("Download started...");
+                String installOutput = LocalExecutor.exec(installCommand, false);
+                System.out.println("installOutput: " + installOutput);
+
+                System.out.println("Extracting...");
+                String extractCommand = buildCommandExtract(remotePath);
+                String extractOutput = LocalExecutor.exec(extractCommand, false);
+                System.out.println("extractOutput: " + extractOutput);
+
+                String move = buildCommandMove(remotePath + "/hazelcast-" + strVersion, remotePath + "/hazelcast");
+                LocalExecutor.exec(move, false);
+                System.out.println("Installation completed...");
             }
-            String strVersion = (String) result.valueOf(version);
 
-            String installCommand = buildCommandDownload(strVersion, localPath);
-            System.out.println("downloadCommand " + installCommand);
-            System.out.println("Download started...");
-            String installOutput = LocalExecutor.exec(installCommand, false);
-            System.out.println("installOutput: " + installOutput);
+            //Remotehost
+            else {
 
-            System.out.println("Extracting...");
-            String extractCommand = buildCommandExtract(localPath);
-            String extractOutput = LocalExecutor.exec(extractCommand, false);
-            System.out.println("extractOutput: " + extractOutput);
+                if (!result.has(version)) {
+                    System.out.println("\"--hazelcast-version <version>\" is required");
+                    return;
+                }
+                String strVersion = (String) result.valueOf(version);
+                String command = buildCommandDownload(strVersion, remotePath);
+                System.out.println("Download started...");
+                SshExecutor.exec(user, hostIp, port, command, false, identityPath);
+                System.out.println("Extracting...");
+                String extractCommand = buildCommandExtract(remotePath);
+                SshExecutor.exec(user, hostIp, port, extractCommand, false, identityPath);
 
-            String move = buildCommandMove(remotePath + "/hazelcast-" + strVersion, localPath + "/hazelcast");
-            LocalExecutor.exec(move, false);
-            System.out.println("Installation completed...");
-        }
+                String move = buildCommandMove(remotePath + "/hazelcast-" + strVersion, remotePath + "/hazelcast-all");
+                SshExecutor.exec(user, hostIp, port, move, false, identityPath);
+                SshExecutor.exec(user, hostIp, port, "mkdir " + remotePath + "/hazelcast", false, identityPath);
+                SshExecutor.exec(user, hostIp, port, "mkdir " + remotePath + "/hazelcast/bin", false, identityPath);
+                String renameJar = buildCommandMove(remotePath + "/hazelcast-all/lib/hazelcast-" + strVersion + ".jar", remotePath + "/hazelcast/hazelcast.jar");
+                SshExecutor.exec(user, hostIp, port, renameJar, false, identityPath);
+                String renameManagementCenter = buildCommandMove(remotePath + "/hazelcast-all/mancenter/mancenter-" + strVersion + ".war", remotePath + "/hazelcast/mancenter.war");
+                SshExecutor.exec(user, hostIp, port, renameManagementCenter, false, identityPath);
 
-        //Remotehost
-        else {
-
-            if (!result.has(version)) {
-                System.out.println("\"--hazelcast-version <version>\" is required");
-                return;
+                System.out.println("Download of Hazelcast " + strVersion + " JAR files, Reference Manual & Javadocs, Code Samples, demo files, and Management Center WAR file " +
+                        "is completed under the path " + remotePath + "/hazelcast-all");
+                System.out.println("Hazelcast version " + strVersion + " installation is completed under the path " + remotePath + "/hazelcast");
             }
-            String strVersion = (String) result.valueOf(version);
-            String command = buildCommandDownload(strVersion, remotePath);
-            System.out.println("Download started...");
-            SshExecutor.exec(user, hostIp, port, command, false, identityPath);
-            System.out.println("Extracting...");
-            String extractCommand = buildCommandExtract(remotePath);
-            SshExecutor.exec(user, hostIp, port, extractCommand, false, identityPath);
-
-            String move = buildCommandMove(remotePath + "/hazelcast-" + strVersion, remotePath + "/hazelcast-all");
-            SshExecutor.exec(user, hostIp, port, move, false, identityPath);
-            SshExecutor.exec(user, hostIp, port, "mkdir " + remotePath + "/hazelcast", false, identityPath);
-            SshExecutor.exec(user, hostIp, port, "mkdir " + remotePath + "/hazelcast/bin", false, identityPath);
-            String renameJar = buildCommandMove(remotePath + "/hazelcast-all/lib/hazelcast-" + strVersion + ".jar", remotePath + "/hazelcast/hazelcast.jar");
-            SshExecutor.exec(user, hostIp, port, renameJar, false, identityPath);
-            String renameManagementCenter = buildCommandMove(remotePath + "/hazelcast-all/mancenter/mancenter-" + strVersion + ".war", remotePath + "/hazelcast/mancenter.war");
-            SshExecutor.exec(user, hostIp, port, renameManagementCenter, false, identityPath);
-
-            System.out.println("Download of Hazelcast " + strVersion + " JAR files, Reference Manual & Javadocs, Code Samples, demo files, and Management Center WAR file " +
-                    "is completed under the path " + remotePath + "/hazelcast-all");
-            System.out.println("Hazelcast version " + strVersion + " installation is completed under the path " + remotePath + "/hazelcast");
+        } catch (Exception e) {
+            System.out.println("Please try installing Hazelcast again.");
         }
 
     }

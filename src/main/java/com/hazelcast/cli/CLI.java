@@ -19,6 +19,10 @@ package com.hazelcast.cli;
 import jline.console.ConsoleReader;
 import joptsimple.OptionSet;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class CLI {
 
     private static ConsoleReader reader;
@@ -39,6 +43,7 @@ public class CLI {
         Boolean open = true;
         CommandOptions commandOptions = new CommandOptions();
         ClusterSettings settings = new ClusterSettings();
+        Set<MachineSettings> machines = new HashSet<MachineSettings>();
 
         while (open) {
 
@@ -52,13 +57,14 @@ public class CLI {
                     //TODO: Handle properties set for local/remote
                     CommandInstall.apply(result, settings);
                 } else if (result.has(commandOptions.startMember)) {
-                    CommandStartMember.apply(result, settings);
-                } else if (result.has(commandOptions.connectMachine)) {
-                    //TODO: Specify connect machine
-                    settings = ClusterSettings.connectToMachine(reader, result);
-                } else if (result.has(commandOptions.disconnectMachine)) {
-                    settings = new ClusterSettings();
-                } else if (result.has(commandOptions.clusterConnect)) {
+                    CommandStartMember.apply(result, machines);
+                } else if (result.has(commandOptions.addMachine)) {
+                    CommandAddMachine.apply(reader, machines);
+                } else if (result.has(commandOptions.removeMachine)) {
+                    CommandRemoveMachine.apply(result, machines);
+                } else if (result.has(commandOptions.listMachines)) {
+                    CommandListMachines.apply(machines);
+                } if (result.has(commandOptions.clusterConnect)) {
                     settings = CommandClusterConnect.apply(reader);
                 } else if (result.has(commandOptions.clusterDisconnect)) {
                     settings = CommandClusterDisconnect.apply();

@@ -15,10 +15,12 @@ public class CommandOptions {
 
     static OptionSpec help = optionParser.acceptsAll(Arrays.asList("help", "h"));
     static OptionSpec exit = optionParser.acceptsAll(Arrays.asList("exit", "e"));
-    static OptionSpec connectMachine = optionParser.acceptsAll(Arrays.asList("connect-machine"));
-    static OptionSpec disconnectMachine = optionParser.acceptsAll(Arrays.asList("disconnect-machine"));
+    static OptionSpec addMachine = optionParser.acceptsAll(Arrays.asList("add-machine"));
+    static OptionSpec removeMachine = optionParser.acceptsAll(Arrays.asList("remove-machine"));
+    static OptionSpec listMachines = optionParser.acceptsAll(Arrays.asList("list-machines"));
+
     static OptionSpec install = optionParser.acceptsAll(Arrays.asList("install", "i"));
-    static OptionSpec startMember = optionParser.acceptsAll(Arrays.asList("s", "start-member"));
+    static OptionSpec startMember = optionParser.acceptsAll(Arrays.asList("s", "start-member")).withRequiredArg().ofType(String.class);
     static OptionSpec startManagementCenter = optionParser.acceptsAll(Arrays.asList("start-mc", "management-center"));
     static OptionSpec version = optionParser.acceptsAll(Arrays.asList("hv", "hazelcast-version")).withRequiredArg().ofType(String.class);
 
@@ -31,6 +33,8 @@ public class CommandOptions {
     static OptionSpec optionClusterPort = optionParser.acceptsAll(Arrays.asList("p", "port")).withRequiredArg().ofType(String.class);
 
     //Options for connection
+
+    static OptionSpec optionMachineName = optionParser.acceptsAll(Arrays.asList("machine-name")).withRequiredArg().ofType(String.class);
     static OptionSpec optionUserName = optionParser.acceptsAll(Arrays.asList("user-name")).withRequiredArg().ofType(String.class);
     static OptionSpec optionIp = optionParser.acceptsAll(Arrays.asList("ip")).withRequiredArg().ofType(String.class);
     static OptionSpec optionRemotePath = optionParser.acceptsAll(Arrays.asList("remote-path")).withRequiredArg().ofType(String.class);
