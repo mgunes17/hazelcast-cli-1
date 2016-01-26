@@ -1,6 +1,5 @@
 package com.hazelcast.cli;
 
-import jline.console.ConsoleReader;
 import joptsimple.OptionSet;
 
 import java.util.Set;
@@ -25,14 +24,11 @@ public class MachineSettings {
 
     }
 
-    public static MachineSettings getMachine(OptionSet result, Set<MachineSettings> machines) {
-        String machineName;
+    public static MachineSettings getMachine(OptionSet result, Set<MachineSettings> machines, String machineName) {
         MachineSettings machine = null;
-        try {
-            machineName = (String) result.valueOf(CommandOptions.optionMachineName);
-        } catch (Exception e) {
+
+        if(machineName == null) {
             System.out.println("No machine name is given.");
-            return null;
         }
 
         boolean machineExists = false;
@@ -44,8 +40,11 @@ public class MachineSettings {
             }
         }
         if (!machineExists) {
-            System.out.println("Machine with the name " + machineName + " does not exist.");
-            System.out.println("Please enter a valid machine name.");
+            if(machineName != null) {
+                System.out.println("Machine with the name " + machineName + " does not exist.");
+            } else {
+                System.out.println("Please enter a valid machine name.");
+            }
             return null;
         } else {
             return machine;

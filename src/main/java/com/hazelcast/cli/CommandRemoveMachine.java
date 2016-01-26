@@ -24,9 +24,16 @@ public class CommandRemoveMachine {
             }
 
             if (!machineRemoved) {
+                if (machineName == null) {
+                    System.out.println(
+                            "Please enter a valid machine name.");
+                } else {
+                    System.out.println(
+                            "Machine with the name '" + machineName + "' does not exist.");
+                }
+            } else {
                 System.out.println(
-                        "Machine with the name " + machineName + " does not exist. \n" +
-                        "Please enter a valid machine name.");
+                        "Machine '" + machineName + "' is removed.");
             }
 
         } catch (Exception e) {

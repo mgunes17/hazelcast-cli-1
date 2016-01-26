@@ -38,6 +38,7 @@ public class SshExecutor {
             //Executes the command given
             ((ChannelExec) channel).setCommand(command);
             channel.connect();
+//            System.out.println("Connection situation : " + channel.isConnected());
 
             String out = null;
             while ((msg = in.readLine()) != null) {
@@ -52,11 +53,20 @@ public class SshExecutor {
 
             return msg;
 
-        } catch (FileNotFoundException e) {
-            System.out.println("Identity file " + identityPath +  " not found");
+        } catch (JSchException e) {
+            if (e.getMessage().equals("Auth fail")) {
+                System.out.println("The authentication to the machine failed.");
+            } else if (e.getMessage().contains("invalid privatekey")) {
+                System.out.println("Invalid private key.");
+            }
+            if (e.getCause() != null) {
+                if (e.getCause().getClass().getName().equals("java.io.FileNotFoundException")) {
+                    System.out.println("Identity file \"" + identityPath +  "\" not found");
+                }
+            }
             return "exception";
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Connection cannot be established. Please try again.");
             return "exception";
         } finally {
             if (channel != null)

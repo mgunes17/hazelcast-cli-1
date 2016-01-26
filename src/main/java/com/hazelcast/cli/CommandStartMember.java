@@ -14,8 +14,21 @@ public class CommandStartMember {
 //                "--connect-machine --user <user> --ip <ip> --remote-path <absolute path for hazelcast> --identity-path <password path>.");
 //            return;
 //        }
+        if (machines.size() == 0) {
+            System.out.println(
+                    "You don't have any machines configured.\n" +
+                            "Please first add a host machine with the command '--add-machine'.");
+            return;
+        }
+        String machineName;
+        try {
+            machineName = (String) result.valueOf("start-member");
+        } catch (Exception e) {
+            System.out.println("No machine name is given.");
+            return;
+        }
 
-        MachineSettings machine = MachineSettings.getMachine(result, machines);
+        MachineSettings machine = MachineSettings.getMachine(result, machines, machineName);
 
         if (machine == null) {
             System.out.println("Please try again to start a member.");

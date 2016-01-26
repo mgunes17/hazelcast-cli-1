@@ -2,6 +2,7 @@ package com.hazelcast.cli;
 
 import jline.console.ConsoleReader;
 
+import java.io.FileNotFoundException;
 import java.util.Set;
 
 public class CommandAddMachine {
@@ -9,16 +10,19 @@ public class CommandAddMachine {
     public static void apply(ConsoleReader reader, Set<MachineSettings> machines) throws Exception {
         try {
             String machineName = "";
-            while (machineName.equals("")) {
+            boolean machineNameExisting = false;
+            while (machineName.equals("")||machineNameExisting) {
                 machineName = reader.readLine("Please give a unique name to your remote machine: ");
-                boolean machineNameExisting = false;
+                machineNameExisting = false;
                 for (MachineSettings machine : machines) {
                     if (machineName.equals(machine.machineName)) {
                         machineNameExisting = true;
                     }
                 }
-                if (machineName.equals("") || machineNameExisting) {
+                if (machineName.equals("")) {
                     System.out.println("Please enter a valid machine name");
+                } else if (machineNameExisting) {
+                    System.out.println("The machine name is already in use");
                 }
             }
 
@@ -66,7 +70,10 @@ public class CommandAddMachine {
                 System.out.println("Please try to add a machine again.");
             }
             return;
+        } catch (FileNotFoundException e) {
+            System.out.println("Please enter a valid identity path.");
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("Please try to add a machine again.");
             return;
         }

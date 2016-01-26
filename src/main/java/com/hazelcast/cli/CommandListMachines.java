@@ -14,11 +14,12 @@ public class CommandListMachines {
 
             for (MachineSettings machine: machines)
                 System.out.println(
+                        "\n" +
                         "Machine Name   :   " + machine.machineName + "\n" +
-                                "User Name      :   " + machine.userName + "\n" +
-                                "Host Ip        :   " + machine.hostIp + "\n" +
-                                "Remote Path    :   " + machine.remotePath + "\n" +
-                                "Identity Path  :   " + machine.identityPath + "\n\n"
+                        "User Name      :   " + machine.userName + "\n" +
+                        "Host Ip        :   " + machine.hostIp + "\n" +
+                        "Remote Path    :   " + machine.remotePath + "\n" +
+                        "Identity Path  :   " + machine.identityPath
                 );
         }
 

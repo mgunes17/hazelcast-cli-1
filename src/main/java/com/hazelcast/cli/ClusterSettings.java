@@ -84,7 +84,6 @@ public class ClusterSettings {
             }
             return settings;
         } catch (Exception e) {
-            e.printStackTrace();
             System.out.println("Please try to connect again.");
             return settings;
         }

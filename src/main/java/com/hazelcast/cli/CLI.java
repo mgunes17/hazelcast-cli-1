@@ -20,7 +20,6 @@ import jline.console.ConsoleReader;
 import joptsimple.OptionSet;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class CLI {
@@ -33,7 +32,7 @@ public class CLI {
         System.out.println((new HazelcastArt()).art);
         System.out.println(
                 "Welcome to Hazelcast command line interface.\n" +
-                " Type --help to see command options.");
+                "Type --help to see command options.");
         mainConsole();
 
     }
@@ -47,48 +46,51 @@ public class CLI {
 
         while (open) {
 
-            String input = reader.readLine("hz > ");
-            OptionSet result = commandOptions.parse(input);
+            try {
+                String input = reader.readLine("hz > ");
+                OptionSet result = commandOptions.parse(input);
 
-            if (result.has(commandOptions.help)) {
-                CommandHelp.apply();
-            } else {
-                if (result.has(commandOptions.install)) {
-                    //TODO: Handle properties set for local/remote
-                    CommandInstall.apply(result, settings);
-                } else if (result.has(commandOptions.startMember)) {
-                    CommandStartMember.apply(result, machines);
-                } else if (result.has(commandOptions.addMachine)) {
-                    CommandAddMachine.apply(reader, machines);
-                } else if (result.has(commandOptions.removeMachine)) {
-                    CommandRemoveMachine.apply(result, machines);
-                } else if (result.has(commandOptions.listMachines)) {
-                    CommandListMachines.apply(machines);
-                } if (result.has(commandOptions.clusterConnect)) {
-                    settings = CommandClusterConnect.apply(reader);
-                } else if (result.has(commandOptions.clusterDisconnect)) {
-                    settings = CommandClusterDisconnect.apply();
-                } else if (result.has(commandOptions.shutdownCluster)) {
-                    CommandClusterShutdown.apply(result, settings);
-                    //TODO:killMember not killNodes
-                } else if (result.has(commandOptions.killMember)) {
-                    CommandClusterKillMember.apply(result, settings);
-                } else if (result.has(commandOptions.listMember)) {
-                    CommandClusterListMember.apply(result, settings);
-                } else if (result.has(commandOptions.getClusterState)) {
-                    CommandClusterGetState.apply(result, settings);
-                } else if (result.has(commandOptions.changeClusterState)) {
-                    CommandClusterChangeState.apply(result, settings);
-                } else if (result.has(commandOptions.changeClusterSettings)) {
-                    CommandClusterChangeSettings.apply(result, settings);
-                } else if (result.has(commandOptions.startManagementCenter)) {
-                    CommandManagementCenterStart.apply(result, settings);
-                } else if (result.has(commandOptions.exit)) {
-                    CommandExitProgram.apply();
-                    open = false;
+                if (result.has(commandOptions.help)) {
+                    CommandHelp.apply();
                 } else {
-                    System.out.println("Command not valid. Please type --help to see valid command options");
+                    if (result.has(commandOptions.install)) {
+                        //TODO: Handle properties set for local/remote
+                        CommandInstall.apply(result, machines);
+                    } else if (result.has(commandOptions.startMember)) {
+                        CommandStartMember.apply(result, machines);
+                    } else if (result.has(commandOptions.addMachine)) {
+                        CommandAddMachine.apply(reader, machines);
+                    } else if (result.has(commandOptions.removeMachine)) {
+                        CommandRemoveMachine.apply(result, machines);
+                    } else if (result.has(commandOptions.listMachines)) {
+                        CommandListMachines.apply(machines);
+                    } else if (result.has(commandOptions.clusterConnect)) {
+                        settings = CommandClusterConnect.apply(reader);
+                    } else if (result.has(commandOptions.clusterDisconnect)) {
+                        settings = CommandClusterDisconnect.apply();
+                    } else if (result.has(commandOptions.shutdownCluster)) {
+                        CommandClusterShutdown.apply(result, settings);
+                    } else if (result.has(commandOptions.killMember)) {
+                        CommandClusterKillMember.apply(result, settings);
+                    } else if (result.has(commandOptions.listMember)) {
+                        CommandClusterListMember.apply(result, settings);
+                    } else if (result.has(commandOptions.getClusterState)) {
+                        CommandClusterGetState.apply(result, settings);
+                    } else if (result.has(commandOptions.changeClusterState)) {
+                        CommandClusterChangeState.apply(result, settings);
+                    } else if (result.has(commandOptions.changeClusterSettings)) {
+                        CommandClusterChangeSettings.apply(result, settings);
+                    } else if (result.has(commandOptions.startManagementCenter)) {
+                        CommandManagementCenterStart.apply(result, settings);
+                    } else if (result.has(commandOptions.exit)) {
+                        CommandExitProgram.apply();
+                        open = false;
+                    } else if (!input.equals("")) {
+                        System.out.println("Command not valid. Please type --help to see valid command options");
+                    }
                 }
+            } catch (Exception e) {
+                System.out.println("Please try again.");
             }
         }
     }
