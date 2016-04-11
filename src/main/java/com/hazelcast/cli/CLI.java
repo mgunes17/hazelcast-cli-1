@@ -19,12 +19,17 @@ package com.hazelcast.cli;
 import jline.console.ConsoleReader;
 import joptsimple.OptionSet;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class CLI {
 
     private static ConsoleReader reader;
+    public static String currentCluster = "";
+    public static Map<String, ArrayList<String>> instanceAdresses = new HashMap<String, ArrayList<String>>();
 
     public static void main(String[] args) throws Exception {
 
@@ -32,7 +37,7 @@ public class CLI {
         System.out.println((new HazelcastArt()).art);
         System.out.println(
                 "Welcome to Hazelcast command line interface.\n" +
-                "Type --help to see command options.");
+                        "Type --help to see command options.");
         mainConsole();
 
     }
@@ -47,7 +52,10 @@ public class CLI {
         while (open) {
 
             try {
-                String input = reader.readLine("hz > ");
+                String input = reader.readLine("hz " + currentCluster + "-> ");
+                if (!input.startsWith("-")) {
+                    input = "-" + input;
+                }
                 OptionSet result = commandOptions.parse(input);
 
                 if (result.has(commandOptions.help)) {
@@ -59,7 +67,7 @@ public class CLI {
                     } else if (result.has(commandOptions.startMember)) {
                         CommandStartMember.apply(result, machines);
                     } else if (result.has(commandOptions.addMachine)) {
-                        CommandAddMachine.apply(reader, machines);
+                        CommandAddMachine.apply(reader, machines, (String) result.valueOf("add-machine"));
                     } else if (result.has(commandOptions.removeMachine)) {
                         CommandRemoveMachine.apply(result, machines);
                     } else if (result.has(commandOptions.listMachines)) {

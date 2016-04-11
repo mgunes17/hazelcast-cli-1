@@ -12,17 +12,16 @@ import java.util.Arrays;
 public class CommandOptions {
 
     static OptionParser optionParser = new OptionParser();
-
     static OptionSpec help = optionParser.acceptsAll(Arrays.asList("help", "h"));
     static OptionSpec exit = optionParser.acceptsAll(Arrays.asList("exit", "e"));
-    static OptionSpec addMachine = optionParser.acceptsAll(Arrays.asList("add-machine"));
+    static OptionSpec addMachine = optionParser.acceptsAll(Arrays.asList("add-machine")).withOptionalArg().ofType(String.class);
     static OptionSpec removeMachine = optionParser.acceptsAll(Arrays.asList("remove-machine")).withOptionalArg().ofType(String.class);
     static OptionSpec listMachines = optionParser.acceptsAll(Arrays.asList("list-machines"));
 
     static OptionSpec install = optionParser.acceptsAll(Arrays.asList("install", "i")).withOptionalArg().ofType(String.class);
     static OptionSpec startMember = optionParser.acceptsAll(Arrays.asList("s", "start-member")).withOptionalArg().ofType(String.class);
     static OptionSpec startManagementCenter = optionParser.acceptsAll(Arrays.asList("start-mc", "management-center"));
-    static OptionSpec version = optionParser.acceptsAll(Arrays.asList("hv", "hazelcast-version")).withRequiredArg().ofType(String.class);
+    static OptionSpec version = optionParser.acceptsAll(Arrays.asList("v", "version")).withRequiredArg().ofType(String.class);
 
     //Options of operations
     static OptionSpec optionClusterName = optionParser.acceptsAll(Arrays.asList("c", "cluster-name")).withRequiredArg().ofType(String.class);

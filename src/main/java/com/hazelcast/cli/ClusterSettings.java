@@ -111,8 +111,8 @@ public class ClusterSettings {
 //            }
 //        }
 
-        settings.user = reader.readLine("User name of the remote machine: ");
-        settings.identityPath = reader.readLine("Identity path to connect to remote machine: ");
+//        settings.user = reader.readLine("User name of the remote machine: ");
+//        settings.identityPath = reader.readLine("Identity path to connect to remote machine: ");
 
         settings.clusterName = "";
         settings.clusterName = reader.readLine("Cluster name/group name: ");
@@ -128,13 +128,13 @@ public class ClusterSettings {
             System.out.println("The password is set to the default \"dev-pass\"");
         }
 
-        settings.hostIp = "";
-        while (settings.hostIp.equals("")) {
-            settings.hostIp = reader.readLine("IP of the member node: ");
-            if (settings.hostIp.equals("")) {
-                System.out.println("Please enter a valid ip address");
-            }
-        }
+//        settings.hostIp = "";
+//        while (settings.hostIp.equals("")) {
+//            settings.hostIp = reader.readLine("IP of the member node: ");
+//            if (settings.hostIp.equals("")) {
+//                System.out.println("Please enter a valid ip address");
+//            }
+//        }
 //        settings.remotePath = "";
 //        while (settings.remotePath.equals("")) {
 //            settings.remotePath = reader.readLine("Hazelcast path of remote host: ");
@@ -150,16 +150,17 @@ public class ClusterSettings {
 //            }
 //        }
         //TODO: Port number handling
-        settings.memberPort = "";
-        settings.memberPort = reader.readLine("Port of the member node: ");
-        if (settings.memberPort.equals("")) {
-            settings.memberPort = "5701";
-            System.out.println("The member port is set to the default \"5701\"");
-        }
+//        settings.memberPort = "";
+//        settings.memberPort = reader.readLine("Port of the member node: ");
+//        if (settings.memberPort.equals("")) {
+//            settings.memberPort = "5701";
+//            System.out.println("The member port is set to the default \"5701\"");
+//        }
 
         System.out.println("Properties for connecting to a cluster set.");
+        CLI.currentCluster = settings.clusterName;
         //TODO: Make sure to actually connect to a cluster
-        System.out.println("Actually connected to a cluster.");
+//        System.out.println("Actually connected to a cluster.");
 
 //        properties.port = 0;
 //        while (properties.port == 0) {

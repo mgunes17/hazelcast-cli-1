@@ -6,7 +6,9 @@ import java.util.Set;
 
 public class CommandStartMember {
 
-    public static void apply (OptionSet result, Set<MachineSettings> machines) throws Exception {
+    static int counter = 1;
+
+    public static void apply(OptionSet result, Set<MachineSettings> machines) throws Exception {
 
 //        if(!properties.isConnectedToMachine) {
 //            System.out.println(
@@ -42,16 +44,34 @@ public class CommandStartMember {
             String remotePath = machine.remotePath;
             String identityPath = machine.identityPath;
 
-            if (!result.has(com.hazelcast.cli.CommandOptions.optionConfigFile)) {
-                System.out.println("A config file is required.");
-                return;
+            String configFile = (String) result.valueOf(com.hazelcast.cli.CommandOptions.optionConfigFile);
+            if (configFile == null) {
+                configFile = CLI.class.getClassLoader().getResource("hazelcast.xml").getFile();
+            }
+            String nodeName = (String) result.valueOf(com.hazelcast.cli.CommandOptions.optionNodeName);
+            if (nodeName == null) {
+                nodeName = "node" + counter++;
             }
 
-            String clusterName = (String) result.valueOf(com.hazelcast.cli.CommandOptions.optionClusterName);
-            String nodeName = (String) result.valueOf(com.hazelcast.cli.CommandOptions.optionNodeName);
-            String configFile = (String) result.valueOf(com.hazelcast.cli.CommandOptions.optionConfigFile);
+//            Config config = new FileSystemXmlConfig(configFile);
+//
+//            config.getNetworkConfig().setPublicAddress(hostIp);
+//            config.getNetworkConfig().getJoin().getTcpIpConfig().setEnabled(true);
+//            if (CLI.instanceAdresses.get(CLI.currentCluster) == null) {
+//                CLI.instanceAdresses.put(CLI.currentCluster, new ArrayList<String>());
+//            }
+//            for (String ip : CLI.instanceAdresses.get(CLI.currentCluster)) {
+//                config.getNetworkConfig().getJoin().getTcpIpConfig().addMember(ip);
+//            }
+//            CLI.instanceAdresses.get(CLI.currentCluster).add(hostIp);
+//
+//            String xml = new ConfigXmlGenerator(true).generate(config);
+//            File temp = File.createTempFile("tempfile", ".tmp");
+//            BufferedWriter bw = new BufferedWriter(new FileWriter(temp));
+//            bw.write(xml);
+//            bw.close();
 
-            String cmd = upload(user, hostIp, nodeName, configFile, remotePath);
+            String cmd = upload(user, hostIp, nodeName, configFile, remotePath, identityPath);
             System.out.println("Uploading config file at path " + configFile);
 
             Runtime.getRuntime().exec(cmd);
@@ -82,32 +102,32 @@ public class CommandStartMember {
 
             System.out.println("Instance started : " + pid);
 
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Please try starting a member again.");
         }
 
     }
 
-    private static String upload(String user, String hostName, String nodeName, String configFile, String path) {
-        if(configFile == null){
+    private static String upload(String user, String hostName, String nodeName, String configFile, String path, String identityPath) {
+        if (configFile == null) {
             configFile = path + "hazelcast/bin/hazelcast.xml";
         }
         //scp bin/hazelcast.xml mefeakengin@localhost:~/hazelcast-istanbul.xml
-        return "scp " + configFile + " " + user + "@" + hostName + ":" + path + "/hazelcast/bin/hazelcast-" + nodeName + ".xml";
+        return "scp -i " + identityPath + " " + configFile + " " + user + "@" + hostName + ":" + path + "/hazelcast/bin/hazelcast-" + nodeName + ".xml";
     }
 
     private static String start(String path, String nodeName) {
         //java -cp "lib/*" -Dhazelcast.config=hazelcast-istanbul.xml com.hazelcast.core.server.StartServer & echo $!
-//        return  "touch " + path + "/hazelcast/bin/log-" + nodeName + ".null && " +
-//                "touch " + path + "/hazelcast/bin/log-" + nodeName + ".out && " +
-//                "nohup java -cp \"" + path + "/hazelcast/hazelcast.jar\" " +
-//                "-Dhazelcast.config=" + path + "/hazelcast/bin/hazelcast-" + nodeName + ".xml " +
-//                "com.hazelcast.core.server.StartServer > " +
-//                path + "/hazelcast/bin/log-" + nodeName + ".null 2> " +
-//                path + "/hazelcast/bin/log-" + nodeName + ".out < /dev/null & echo $!";
-        return  "java -cp \"" + path + "/hazelcast/hazelcast.jar\" " +
+        return "touch " + path + "/hazelcast/bin/log-" + nodeName + ".null && " +
+                "touch " + path + "/hazelcast/bin/log-" + nodeName + ".out && " +
+                "java -cp \"" + path + "/hazelcast/hazelcast.jar\" " +
                 "-Dhazelcast.config=" + path + "/hazelcast/bin/hazelcast-" + nodeName + ".xml " +
-                "com.hazelcast.core.server.StartServer & echo $!";
+                "com.hazelcast.core.server.StartServer > " +
+                path + "/hazelcast/bin/log-" + nodeName + ".null 2> " +
+                path + "/hazelcast/bin/log-" + nodeName + ".out < /dev/null & echo $!";
+//        return "java -cp \"" + path + "/hazelcast/hazelcast.jar\" " +
+//                "-Dhazelcast.config=" + path + "/hazelcast/bin/hazelcast-" + nodeName + ".xml " +
+//                "com.hazelcast.core.server.StartServer & echo $!";
     }
 
 }
