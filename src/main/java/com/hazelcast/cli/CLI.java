@@ -19,7 +19,6 @@ package com.hazelcast.cli;
 import jline.console.ConsoleReader;
 import joptsimple.OptionSet;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -29,7 +28,8 @@ public class CLI {
 
     private static ConsoleReader reader;
     public static String currentCluster = "";
-    public static Map<String, ArrayList<String>> instanceAdresses = new HashMap<String, ArrayList<String>>();
+    public static String currentClusterPassword = "";
+    public static Map<String, String> firstMember = new HashMap<String, String>();
 
     public static void main(String[] args) throws Exception {
 
@@ -77,7 +77,7 @@ public class CLI {
                     } else if (result.has(commandOptions.clusterDisconnect)) {
                         settings = CommandClusterDisconnect.apply();
                     } else if (result.has(commandOptions.shutdownCluster)) {
-                        CommandClusterShutdown.apply(result, settings);
+                        CommandClusterShutdown.apply(result, machines,settings);
                     } else if (result.has(commandOptions.killMember)) {
                         CommandClusterKillMember.apply(result, settings);
                     } else if (result.has(commandOptions.listMember)) {

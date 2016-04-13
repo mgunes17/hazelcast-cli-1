@@ -159,6 +159,7 @@ public class ClusterSettings {
 
         System.out.println("Properties for connecting to a cluster set.");
         CLI.currentCluster = settings.clusterName;
+        CLI.currentClusterPassword = settings.password;
         //TODO: Make sure to actually connect to a cluster
 //        System.out.println("Actually connected to a cluster.");
 

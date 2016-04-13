@@ -1,52 +1,30 @@
 package com.hazelcast.cli;
 
 import joptsimple.OptionSet;
-import joptsimple.OptionSpec;
+
+import java.util.Set;
 
 /**
  * Created by mefeakengin on 1/19/16.
  */
 public class CommandClusterShutdown {
 
-    public static void apply (OptionSet result, ClusterSettings properties) throws Exception {
+    public static void apply(OptionSet result, Set<MachineSettings> machines, ClusterSettings properties) throws Exception {
 
-        if(!properties.isConnectedToCluster) {
+        if (!properties.isConnectedToCluster) {
             System.out.println("Please first connect to a cluster by typing --cluster-connect.");
             return;
         }
-
-        String user = properties.user;
-        String hostIp = properties.hostIp;
+        String machineName = CLI.firstMember.get(CLI.currentCluster);
+        MachineSettings machineSettings = MachineSettings.getMachine(null, machines, machineName);
+        String user = machineSettings.userName;
+        String hostIp = machineSettings.hostIp;
         int port = properties.port;
-        String identityPath = properties.identityPath;
+        String identityPath = machineSettings.identityPath;
 
-        OptionSpec optionGroupName = com.hazelcast.cli.CommandOptions.optionGroupName;
-        OptionSpec optionPassword = com.hazelcast.cli.CommandOptions.optionPassword;
-        OptionSpec optionClusterPort = com.hazelcast.cli.CommandOptions.optionClusterPort;
-
-        String groupName;
-        if (result.has(optionGroupName)) {
-            groupName = (String) result.valueOf(optionGroupName);
-        } else {
-            groupName = "dev";
-            System.out.println("Group name is not specified, default group name is set to: " + groupName);
-        }
-
-        String password;
-        if (result.has(optionPassword)) {
-            password = (String) result.valueOf(optionPassword);
-        } else {
-            password = "dev-pass";
-            System.out.println("Password is not specified, default password is set to: " + password);
-        }
-
-        String clusterPort;
-        if (result.has(optionClusterPort)) {
-            clusterPort = (String) result.valueOf(optionClusterPort);
-        } else {
-            clusterPort = "5701";
-            System.out.println("Port is not specified, default port is set to: " + clusterPort);
-        }
+        String groupName = CLI.currentCluster;
+        String password = CLI.currentClusterPassword;
+        String clusterPort = "5701";
 
         String shutdownCmd = buildCommandShutdownCluster(hostIp, clusterPort, groupName, password);
 
