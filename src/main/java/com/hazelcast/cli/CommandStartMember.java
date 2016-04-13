@@ -8,7 +8,7 @@ public class CommandStartMember {
 
     static int counter = 1;
 
-    public static void apply(OptionSet result, Set<MachineSettings> machines) throws Exception {
+    public static void apply(OptionSet result, ClusterSettings settings, Set<MachineSettings> machines) throws Exception {
 
 //        if(!properties.isConnectedToMachine) {
 //            System.out.println(
@@ -39,6 +39,10 @@ public class CommandStartMember {
 
         try {
             if (CLI.firstMember.get(CLI.currentCluster) == null) {
+                settings.hostIp = machine.hostIp;
+                settings.identityPath = machine.identityPath;
+                settings.port = machine.sshPort;
+                settings.memberPort = "5701";
                 CLI.firstMember.put(CLI.currentCluster, machineName);
             }
             String user = machine.userName;
@@ -121,16 +125,16 @@ public class CommandStartMember {
 
     private static String start(String path, String nodeName) {
         //java -cp "lib/*" -Dhazelcast.config=hazelcast-istanbul.xml com.hazelcast.core.server.StartServer & echo $!
-        return "touch " + path + "/hazelcast/bin/log-" + nodeName + ".null && " +
-                "touch " + path + "/hazelcast/bin/log-" + nodeName + ".out && " +
-                "java -cp \"" + path + "/hazelcast/hazelcast.jar\" " +
-                "-Dhazelcast.config=" + path + "/hazelcast/bin/hazelcast-" + nodeName + ".xml " +
-                "com.hazelcast.core.server.StartServer > " +
-                path + "/hazelcast/bin/log-" + nodeName + ".null 2> " +
-                path + "/hazelcast/bin/log-" + nodeName + ".out < /dev/null & echo $!";
-//        return "java -cp \"" + path + "/hazelcast/hazelcast.jar\" " +
+//        return "touch " + path + "/hazelcast/bin/log-" + nodeName + ".null && " +
+//                "touch " + path + "/hazelcast/bin/log-" + nodeName + ".out && " +
+//                "java -cp \"" + path + "/hazelcast/hazelcast.jar\" " +
 //                "-Dhazelcast.config=" + path + "/hazelcast/bin/hazelcast-" + nodeName + ".xml " +
-//                "com.hazelcast.core.server.StartServer & echo $!";
+//                "com.hazelcast.core.server.StartServer > " +
+//                path + "/hazelcast/bin/log-" + nodeName + ".null 2> " +
+//                path + "/hazelcast/bin/log-" + nodeName + ".out < /dev/null & echo $!";
+        return "java -cp \"" + path + "/hazelcast/hazelcast.jar\" " +
+                "-Dhazelcast.config=" + path + "/hazelcast/bin/hazelcast-" + nodeName + ".xml " +
+                "com.hazelcast.core.server.StartServer & echo $!";
     }
 
 }

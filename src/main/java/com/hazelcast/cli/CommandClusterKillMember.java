@@ -1,34 +1,46 @@
 package com.hazelcast.cli;
 
 import joptsimple.OptionSet;
-import joptsimple.OptionSpec;
 
-/**
- * Created by mefeakengin on 1/19/16.
- */
+import java.util.Set;
+
+
 public class CommandClusterKillMember {
 
-    public static void apply (OptionSet result, ClusterSettings properties) throws Exception {
+    public static void apply(OptionSet result, Set<MachineSettings> machines, ClusterSettings properties) throws Exception {
 
-        if(!properties.isConnectedToCluster) {
+        if (!properties.isConnectedToCluster) {
             System.out.println("Please first connect to a cluster by typing --cluster-connect.");
             return;
         }
 
-        String user = properties.user;
-        String hostIp = properties.hostIp;
-        String clusterPort = properties.memberPort;
-        String groupName = properties.clusterName;
-        String password = properties.password;
-        int port = properties.port;
-        String identityPath = properties.identityPath;
+//        String user = properties.user;
+//        String hostIp = properties.hostIp;
+//        String clusterPort = properties.memberPort;
+//        String groupName = properties.clusterName;
+//        String password = properties.password;
+//        int port = properties.port;
+//        String identityPath = properties.identityPath;
 
         if (!result.has(CommandOptions.killMember)) {
-            System.out.println("Please specify a member port to kill");
+            System.out.println("Please specify a host to kill");
+            return;
+        }
+        if (!result.has(CommandOptions.optionClusterPort)) {
+            System.out.println("Please specify a port to kill");
             return;
         }
 
-        String memberKillPort = (String) result.valueOf(CommandOptions.killMember);
+        String hostName = (String) result.valueOf(CommandOptions.killMember);
+        String memberKillPort = (String) result.valueOf(CommandOptions.optionClusterPort);
+        MachineSettings machineSettings = MachineSettings.getMachine(null, machines, hostName);
+        String user = machineSettings.userName;
+        String hostIp = machineSettings.hostIp;
+        String groupName = CLI.currentCluster;
+        String password = CLI.currentClusterPassword;
+        String identityPath = machineSettings.identityPath;
+        int port = machineSettings.sshPort;
+
 
         String killNodeCmd = buildCommandKillMember(hostIp, memberKillPort, groupName, password);
 

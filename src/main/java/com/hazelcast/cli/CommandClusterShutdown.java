@@ -2,29 +2,26 @@ package com.hazelcast.cli;
 
 import joptsimple.OptionSet;
 
-import java.util.Set;
-
 /**
  * Created by mefeakengin on 1/19/16.
  */
 public class CommandClusterShutdown {
 
-    public static void apply(OptionSet result, Set<MachineSettings> machines, ClusterSettings properties) throws Exception {
+    public static void apply(OptionSet result, ClusterSettings properties) throws Exception {
 
         if (!properties.isConnectedToCluster) {
             System.out.println("Please first connect to a cluster by typing --cluster-connect.");
             return;
         }
-        String machineName = CLI.firstMember.get(CLI.currentCluster);
-        MachineSettings machineSettings = MachineSettings.getMachine(null, machines, machineName);
-        String user = machineSettings.userName;
-        String hostIp = machineSettings.hostIp;
-        int port = properties.port;
-        String identityPath = machineSettings.identityPath;
 
-        String groupName = CLI.currentCluster;
-        String password = CLI.currentClusterPassword;
-        String clusterPort = "5701";
+        String user = properties.user;
+        String hostIp = properties.hostIp;
+        int port = properties.port;
+        String identityPath = properties.identityPath;
+
+        String groupName = properties.clusterName;
+        String password = properties.password;
+        String clusterPort = properties.memberPort;
 
         String shutdownCmd = buildCommandShutdownCluster(hostIp, clusterPort, groupName, password);
 

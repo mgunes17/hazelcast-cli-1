@@ -65,7 +65,7 @@ public class CLI {
                         //TODO: Handle properties set for local/remote
                         CommandInstall.apply(result, machines);
                     } else if (result.has(commandOptions.startMember)) {
-                        CommandStartMember.apply(result, machines);
+                        CommandStartMember.apply(result, settings, machines);
                     } else if (result.has(commandOptions.addMachine)) {
                         CommandAddMachine.apply(reader, machines, (String) result.valueOf("add-machine"));
                     } else if (result.has(commandOptions.removeMachine)) {
@@ -77,9 +77,9 @@ public class CLI {
                     } else if (result.has(commandOptions.clusterDisconnect)) {
                         settings = CommandClusterDisconnect.apply();
                     } else if (result.has(commandOptions.shutdownCluster)) {
-                        CommandClusterShutdown.apply(result, machines,settings);
+                        CommandClusterShutdown.apply(result, settings);
                     } else if (result.has(commandOptions.killMember)) {
-                        CommandClusterKillMember.apply(result, settings);
+                        CommandClusterKillMember.apply(result, machines, settings);
                     } else if (result.has(commandOptions.listMember)) {
                         CommandClusterListMember.apply(result, settings);
                     } else if (result.has(commandOptions.getClusterState)) {
