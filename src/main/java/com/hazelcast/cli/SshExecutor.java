@@ -1,9 +1,12 @@
 package com.hazelcast.cli;
 
-import com.jcraft.jsch.*;
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 
-import java.io.*;
-import java.nio.channels.Channel;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.Properties;
 
 /**
@@ -11,9 +14,9 @@ import java.util.Properties;
  */
 public class SshExecutor {
 
-    public static String exec(String user, String host, int port, String command, boolean breakProcess, String identityPath) throws Exception {
+    public static String exec(String user, String host, int port, String command, boolean breakProcess, String identityPath, boolean shouldPrint) throws Exception {
 
-        System.out.println("user " + user + " host " + host + " port " + port + " identity path " + identityPath + " command " + command);
+//        System.out.println("user " + user + " host " + host + " port " + port + " identity path " + identityPath + " command " + command);
         Session session = null;
         ChannelExec channel = null;
         String msg = null;
@@ -42,7 +45,9 @@ public class SshExecutor {
 
             String out = null;
             while ((msg = in.readLine()) != null) {
-                System.out.println(msg);
+                if (shouldPrint) {
+                    System.out.println(msg);
+                }
                 out = msg;
                 //How does the breakProcess work?
                 //Is the first msg the PID? How do we make sure that?
@@ -51,7 +56,7 @@ public class SshExecutor {
                 }
             }
 
-            return msg;
+            return out;
 
         } catch (JSchException e) {
             if (e.getMessage().equals("Auth fail")) {
@@ -61,7 +66,7 @@ public class SshExecutor {
             }
             if (e.getCause() != null) {
                 if (e.getCause().getClass().getName().equals("java.io.FileNotFoundException")) {
-                    System.out.println("Identity file \"" + identityPath +  "\" not found");
+                    System.out.println("Identity file \"" + identityPath + "\" not found");
                 }
             }
             return "exception";
@@ -70,10 +75,10 @@ public class SshExecutor {
             return "exception";
         } finally {
             if (channel != null)
-            channel.disconnect();
+                channel.disconnect();
 
             if (session != null)
-            session.disconnect();
+                session.disconnect();
         }
     }
 

@@ -78,19 +78,20 @@ public class CommandInstall {
                 String strVersion = (String) result.valueOf(version);
                 String command = buildCommandDownload(strVersion, remotePath);
                 System.out.println("Download started...");
-                SshExecutor.exec(user, hostIp, port, command, false, identityPath);
+                SshExecutor.exec(user, hostIp, port, command, false, identityPath, false);
                 System.out.println("Extracting...");
                 String extractCommand = buildCommandExtract(remotePath);
-                SshExecutor.exec(user, hostIp, port, extractCommand, false, identityPath);
+                SshExecutor.exec(user, hostIp, port, extractCommand, false, identityPath, false);
 
                 String move = buildCommandMove(remotePath + "/hazelcast-" + strVersion, remotePath + "/hazelcast-all");
-                SshExecutor.exec(user, hostIp, port, move, false, identityPath);
-                SshExecutor.exec(user, hostIp, port, "mkdir " + remotePath + "/hazelcast", false, identityPath);
-                SshExecutor.exec(user, hostIp, port, "mkdir " + remotePath + "/hazelcast/bin", false, identityPath);
+                SshExecutor.exec(user, hostIp, port, move, false, identityPath, false);
+                SshExecutor.exec(user, hostIp, port, "mkdir " + remotePath + "/hazelcast", false, identityPath, false);
+                SshExecutor.exec(user, hostIp, port, "mkdir " + remotePath + "/ports", false, identityPath, false);
+                SshExecutor.exec(user, hostIp, port, "mkdir " + remotePath + "/hazelcast/bin", false, identityPath, false);
                 String renameJar = buildCommandMove(remotePath + "/hazelcast-all/lib/hazelcast-" + strVersion + ".jar", remotePath + "/hazelcast/hazelcast.jar");
-                SshExecutor.exec(user, hostIp, port, renameJar, false, identityPath);
+                SshExecutor.exec(user, hostIp, port, renameJar, false, identityPath, false);
                 String renameManagementCenter = buildCommandMove(remotePath + "/hazelcast-all/mancenter/mancenter-" + strVersion + ".war", remotePath + "/hazelcast/mancenter.war");
-                SshExecutor.exec(user, hostIp, port, renameManagementCenter, false, identityPath);
+                SshExecutor.exec(user, hostIp, port, renameManagementCenter, false, identityPath, false);
 
                 System.out.println("Download of Hazelcast " + strVersion + " JAR files, Reference Manual & Javadocs, Code Samples, demo files, and Management Center WAR file " +
                         "is completed under the path " + remotePath + "/hazelcast-all");

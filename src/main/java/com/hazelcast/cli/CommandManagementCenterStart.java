@@ -21,7 +21,7 @@ public class CommandManagementCenterStart {
         String identityPath = properties.identityPath;
 
         //TODO: Allow .xml configuration!
-        SshExecutor.exec(user, hostIp, port, buildCommandStartMC(remotePath, hostIp), false, identityPath);
+        SshExecutor.exec(user, hostIp, port, buildCommandStartMC(remotePath, hostIp), false, identityPath, false);
 
     }
 

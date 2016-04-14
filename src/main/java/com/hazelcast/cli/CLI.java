@@ -19,15 +19,20 @@ package com.hazelcast.cli;
 import jline.console.ConsoleReader;
 import joptsimple.OptionSet;
 
+import java.io.InputStream;
+import java.util.AbstractMap;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 public class CLI {
 
     private static ConsoleReader reader;
     public static Map<String, String> firstMember = new HashMap<String, String>();
+    public static Map<String, AbstractMap.SimpleEntry<String, String>> members = new HashMap<String, AbstractMap.SimpleEntry<String, String>>();
 
     public static void main(String[] args) throws Exception {
 
@@ -46,7 +51,7 @@ public class CLI {
         CommandOptions commandOptions = new CommandOptions();
         ClusterSettings settings = new ClusterSettings();
         Set<MachineSettings> machines = new HashSet<MachineSettings>();
-
+        addMachines(machines);
         while (open) {
 
             try {
@@ -64,13 +69,13 @@ public class CLI {
                         CommandInstall.apply(result, machines);
                     } else if (result.has(commandOptions.startMember)) {
                         CommandStartMember.apply(result, settings, machines);
-                    } else if (result.has(commandOptions.addMachine)) {
-                        CommandAddMachine.apply(reader, machines, (String) result.valueOf("add-machine"));
+//                    } else if (result.has(commandOptions.addMachine)) {
+//                        CommandAddMachine.apply(reader, machines, (String) result.valueOf("add-machine"));
                     } else if (result.has(commandOptions.removeMachine)) {
                         CommandRemoveMachine.apply(result, machines);
                     } else if (result.has(commandOptions.listMachines)) {
                         CommandListMachines.apply(machines);
-                    } else if (result.has(commandOptions.clusterConnect)) {
+                    } else if (result.has(commandOptions.createCluster)) {
                         settings = CommandClusterConnect.apply(reader);
                     } else if (result.has(commandOptions.clusterDisconnect)) {
                         settings = CommandClusterDisconnect.apply();
@@ -78,6 +83,8 @@ public class CLI {
                         CommandClusterShutdown.apply(result, settings);
                     } else if (result.has(commandOptions.killMember)) {
                         CommandClusterKillMember.apply(result, machines, settings);
+                    } else if (result.has(commandOptions.forceStart)) {
+                        CommandForceStartMember.apply(result, machines, settings);
                     } else if (result.has(commandOptions.listMember)) {
                         CommandClusterListMember.apply(result, settings);
                     } else if (result.has(commandOptions.getClusterState)) {
@@ -99,6 +106,41 @@ public class CLI {
                 System.out.println("Please try again.");
             }
         }
+    }
+
+    private static void addMachines(Set<MachineSettings> machines) throws Exception {
+        HashMap<String, String> hashMap = new HashMap();
+        Set<String> set = new HashSet();
+        Properties prop = new Properties();
+        InputStream is = CLI.class.getClassLoader().getResourceAsStream("cli.properties");
+        prop.load(is);
+        Enumeration it = prop.propertyNames();
+        while (it.hasMoreElements()) {
+            String token = (String) it.nextElement();
+            String key = token.split("\\.")[0];
+            String value = token.split("\\.")[1];
+            hashMap.put(token, prop.getProperty(token));
+            set.add(key);
+        }
+
+        for (String key : set) {
+            String userName = hashMap.get(key + ".user");
+            String hostIp = hashMap.get(key + ".ip");
+            String remotePath = hashMap.get(key + ".remotePath");
+            String identityPath = hashMap.get(key + ".identityPath");
+            MachineSettings machine = new MachineSettings(key, userName, hostIp, remotePath, identityPath);
+
+            System.out.println("Connection settings set for " + machine.userName + "@" + machine.hostIp);
+            String message = SshExecutor.exec(machine.userName, machine.hostIp, 22, "", false, machine.identityPath, false);
+            if ((message == null) || (!message.equals("exception"))) {
+                System.out.println("Machine " + machine.machineName + " is added.");
+                machines.add(machine);
+            } else {
+                System.out.println("Could not connect to the machine.");
+                System.out.println("Please try to add a machine again.");
+            }
+        }
+
     }
 
 }

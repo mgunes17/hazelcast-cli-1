@@ -25,7 +25,7 @@ public class CommandClusterListMember {
 
         String listNodesCmd = buildCommandListNodes(hostIp, clusterPort, groupName, password);
 
-        SshExecutor.exec(user, hostIp, port, listNodesCmd, false, identityPath);
+        SshExecutor.exec(user, hostIp, port, listNodesCmd, false, identityPath,true);
 
     }
 

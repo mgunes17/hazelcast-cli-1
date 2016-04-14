@@ -14,18 +14,16 @@ public class CommandClusterChangeSettings {
             return;
         }
 
-        String hostname = reader.readLine("Enter the machine name that commands will be executed");
-        if (!hostname.equals("")) {
-            MachineSettings machineSettings = MachineSettings.getMachine(null, machines, hostname);
+        String memberName = reader.readLine("Enter the member name that commands will be executed");
+        if (!memberName.equals("")) {
+            MachineSettings machineSettings = MachineSettings.getMachine(null, machines, CLI.members.get(memberName).getKey());
             properties.hostIp = machineSettings.hostIp;
             properties.user = machineSettings.userName;
             properties.port = machineSettings.sshPort;
             properties.identityPath = machineSettings.identityPath;
+            properties.memberPort = CLI.members.get(memberName).getValue();
         }
-        String port = reader.readLine("Enter the port name that commands will be executed");
-        if (!port.equals("")) {
-            properties.memberPort = port;
-        }
+
     }
 
 }

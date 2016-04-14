@@ -74,7 +74,7 @@ public class CommandAddMachine {
             MachineSettings machine = new MachineSettings(machineName, userName, hostIp, remotePath, identityPath);
 
             System.out.println("Connection settings set for " + machine.userName + "@" + machine.hostIp);
-            String message = SshExecutor.exec(machine.userName, machine.hostIp, 22, "", false, machine.identityPath);
+            String message = SshExecutor.exec(machine.userName, machine.hostIp, 22, "", false, machine.identityPath, false);
             if ((message == null) || (!message.equals("exception"))) {
                 System.out.println("Machine " + machine.machineName + " is added.");
                 machines.add(machine);

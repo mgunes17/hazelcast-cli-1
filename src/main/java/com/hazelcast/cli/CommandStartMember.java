@@ -2,6 +2,7 @@ package com.hazelcast.cli;
 
 import joptsimple.OptionSet;
 
+import java.util.AbstractMap;
 import java.util.Set;
 
 public class CommandStartMember {
@@ -57,6 +58,10 @@ public class CommandStartMember {
                 configFile = CLI.class.getClassLoader().getResource("hazelcast.xml").getFile();
             }
             String nodeName = (String) result.valueOf(com.hazelcast.cli.CommandOptions.optionNodeName);
+            if (nodeName != null && CLI.members.get(nodeName) != null) {
+                System.out.println("This nodename already exist, please try again");
+                return;
+            }
             if (nodeName == null) {
                 nodeName = "node" + counter++;
             }
@@ -80,7 +85,7 @@ public class CommandStartMember {
 //            bw.close();
 
             String cmd = upload(user, hostIp, nodeName, configFile, remotePath, identityPath);
-            System.out.println("Uploading config file at path " + configFile);
+//            System.out.println("Uploading config file at path " + configFile);
 
             Runtime.getRuntime().exec(cmd);
 
@@ -95,7 +100,13 @@ public class CommandStartMember {
             String startCmd = start(remotePath, nodeName);
 
             //TODO: can I assume that java is already installed to Amazon EC2 ?
-            String pid = SshExecutor.exec(user, hostIp, port, startCmd, true, identityPath);
+            String pid = SshExecutor.exec(user, hostIp, port, startCmd, true, identityPath, false);
+            String hostport = null;
+            while (hostport == null) {
+                hostport = SshExecutor.exec(user, hostIp, port, "cat " + remotePath + "/ports/" + nodeName, true, identityPath, false);
+            }
+            System.out.println("hostport = " + hostport);
+            CLI.members.put(nodeName, new AbstractMap.SimpleEntry(machineName, hostport));
 
             //            //TODO: Standardize "/log.out"
             //            int oldLogLength = returnValue.lineCounter;
@@ -134,7 +145,7 @@ public class CommandStartMember {
 //                path + "/hazelcast/bin/log-" + nodeName + ".null 2> " +
 //                path + "/hazelcast/bin/log-" + nodeName + ".out < /dev/null & echo $!";
         return "java -cp \"" + path + "/hazelcast/hazelcast.jar\" " +
-                "-Dhazelcast.config=" + path + "/hazelcast/bin/hazelcast-" + nodeName + ".xml " +
+                "-Dhazelcast.config=" + path + "/hazelcast/bin/hazelcast-" + nodeName + ".xml " + "-Dmember.tag=" + nodeName + " " +
                 "com.hazelcast.core.server.StartServer & echo $!";
     }
 

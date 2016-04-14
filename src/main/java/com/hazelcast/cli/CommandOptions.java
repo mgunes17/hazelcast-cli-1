@@ -41,13 +41,14 @@ public class CommandOptions {
     static OptionSpec optionLocalPath = optionParser.acceptsAll(Arrays.asList("local-path")).withRequiredArg().ofType(String.class);
 
     //Options for cluster operations
-    static OptionSpec shutdownCluster = optionParser.acceptsAll(Arrays.asList("shutdown", "S"));
+    static OptionSpec shutdownCluster = optionParser.acceptsAll(Arrays.asList("cluster-shutdown", "S"));
     static OptionSpec killMember = optionParser.acceptsAll(Arrays.asList("k", "kill-member")).withRequiredArg().ofType(String.class);
     static OptionSpec listMember = optionParser.acceptsAll(Arrays.asList("l", "list-member"));
     static OptionSpec getClusterState = optionParser.acceptsAll(Arrays.asList("cluster-state"));
     static OptionSpec changeClusterState = optionParser.acceptsAll(Arrays.asList("cluster-change-state")).withRequiredArg().ofType(String.class);
     static OptionSpec changeClusterSettings = optionParser.acceptsAll(Arrays.asList("cluster-change-settings")).withRequiredArg().ofType(String.class);
-    static OptionSpec clusterConnect = optionParser.acceptsAll(Arrays.asList("cluster-connect"));
+    static OptionSpec createCluster = optionParser.acceptsAll(Arrays.asList("create-cluster"));
+    static OptionSpec forceStart = optionParser.acceptsAll(Arrays.asList("force-start")).withOptionalArg().ofType(String.class);
     static OptionSpec clusterDisconnect = optionParser.acceptsAll(Arrays.asList("cluster-disconnect"));
 
     public OptionSet parse(String input) throws Exception {

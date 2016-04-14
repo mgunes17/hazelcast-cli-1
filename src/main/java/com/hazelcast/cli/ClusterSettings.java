@@ -72,7 +72,7 @@ public class ClusterSettings {
                 settings.remotePath = (String) result.valueOf("remote-path");
                 settings.identityPath = (String) result.valueOf("identity-path");
                 System.out.println("Connection settings set for " + settings.user + "@" + settings.hostIp);
-                String message = SshExecutor.exec(settings.user, settings.hostIp, 22, "", false, settings.identityPath);
+                String message = SshExecutor.exec(settings.user, settings.hostIp, 22, "", false, settings.identityPath, false);
                 if ((message == null) || (!message.equals("exception"))) {
                     System.out.println("Connected to the machine.");
                     settings.isConnectedToMachine = true;

@@ -51,7 +51,7 @@ public class CommandClusterGetState {
 
         String killNodeCmd = buildCommandGetClusterState(hostIp, clusterPort, groupName, password);
 
-        SshExecutor.exec(user, hostIp, port, killNodeCmd, false, identityPath);
+        SshExecutor.exec(user, hostIp, port, killNodeCmd, false, identityPath, false);
 
     }
 

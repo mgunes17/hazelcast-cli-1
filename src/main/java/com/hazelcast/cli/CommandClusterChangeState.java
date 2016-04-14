@@ -54,7 +54,7 @@ public class CommandClusterChangeState {
 
         String changeClusterStateCmd = buildCommandChangeClusterState(hostIp, clusterPort, groupName, password, stateParam);
 
-        SshExecutor.exec(user, hostIp, port, changeClusterStateCmd, false, identityPath);
+        SshExecutor.exec(user, hostIp, port, changeClusterStateCmd, false, identityPath, false);
 
     }
 
