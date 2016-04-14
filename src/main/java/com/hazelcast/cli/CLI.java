@@ -27,8 +27,6 @@ import java.util.Set;
 public class CLI {
 
     private static ConsoleReader reader;
-    public static String currentCluster = "";
-    public static String currentClusterPassword = "";
     public static Map<String, String> firstMember = new HashMap<String, String>();
 
     public static void main(String[] args) throws Exception {
@@ -52,7 +50,7 @@ public class CLI {
         while (open) {
 
             try {
-                String input = reader.readLine("hz " + currentCluster + "-> ");
+                String input = reader.readLine("hz " + settings.clusterName + "-> ");
                 if (!input.startsWith("-")) {
                     input = "-" + input;
                 }
@@ -87,7 +85,7 @@ public class CLI {
                     } else if (result.has(commandOptions.changeClusterState)) {
                         CommandClusterChangeState.apply(result, settings);
                     } else if (result.has(commandOptions.changeClusterSettings)) {
-                        CommandClusterChangeSettings.apply(result, settings);
+                        CommandClusterChangeSettings.apply(result, reader, machines, settings);
                     } else if (result.has(commandOptions.startManagementCenter)) {
                         CommandManagementCenterStart.apply(result, settings);
                     } else if (result.has(commandOptions.exit)) {

@@ -27,6 +27,8 @@ public class CommandClusterShutdown {
 
         SshExecutor.exec(user, hostIp, port, shutdownCmd, false, identityPath);
 
+        CLI.firstMember.remove(properties.clusterName);
+
     }
 
     public static String buildCommandShutdownCluster(String hostIp, String clusterPort, String groupName, String password) {

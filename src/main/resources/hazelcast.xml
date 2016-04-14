@@ -4,8 +4,13 @@
            xmlns="http://www.hazelcast.com/schema/config">
     <network>
         <join>
-            <tcp-ip enabled="false"/>
-            <multicast enabled="true"/>
+            <tcp-ip enabled="true">
+                <member-list>
+                    <member>172.30.0.200</member>
+                    <member>172.30.0.245</member>
+                </member-list>
+            </tcp-ip>
+            <multicast enabled="false"/>
             <aws enabled="false">
                 <access-key>my-access-key</access-key>
                 <secret-key>my-secret-key</secret-key>

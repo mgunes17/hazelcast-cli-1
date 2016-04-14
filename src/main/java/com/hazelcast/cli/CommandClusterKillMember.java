@@ -36,8 +36,8 @@ public class CommandClusterKillMember {
         MachineSettings machineSettings = MachineSettings.getMachine(null, machines, hostName);
         String user = machineSettings.userName;
         String hostIp = machineSettings.hostIp;
-        String groupName = CLI.currentCluster;
-        String password = CLI.currentClusterPassword;
+        String groupName = properties.clusterName;
+        String password = properties.password;
         String identityPath = machineSettings.identityPath;
         int port = machineSettings.sshPort;
 

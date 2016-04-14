@@ -38,12 +38,13 @@ public class CommandStartMember {
         }
 
         try {
-            if (CLI.firstMember.get(CLI.currentCluster) == null) {
+            if (CLI.firstMember.get(settings.clusterName) == null) {
+                settings.user = machine.userName;
                 settings.hostIp = machine.hostIp;
                 settings.identityPath = machine.identityPath;
                 settings.port = machine.sshPort;
                 settings.memberPort = "5701";
-                CLI.firstMember.put(CLI.currentCluster, machineName);
+                CLI.firstMember.put(settings.clusterName, machineName);
             }
             String user = machine.userName;
             String hostIp = machine.hostIp;
