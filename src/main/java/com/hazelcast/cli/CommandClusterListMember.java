@@ -2,9 +2,7 @@ package com.hazelcast.cli;
 
 import joptsimple.OptionSet;
 
-/**
- * Created by mefeakengin on 1/19/16.
- */
+
 public class CommandClusterListMember {
 
     public static void apply(OptionSet result, ClusterSettings properties) throws Exception {

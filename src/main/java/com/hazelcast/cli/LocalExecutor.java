@@ -3,9 +3,6 @@ package com.hazelcast.cli;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-/**
- * Created by mefeakengin on 12/25/15.
- */
 public class LocalExecutor {
 
     public static String exec(String command, boolean breakProcess) throws Exception {

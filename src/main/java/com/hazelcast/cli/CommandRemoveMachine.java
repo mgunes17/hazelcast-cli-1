@@ -4,9 +4,6 @@ import joptsimple.OptionSet;
 
 import java.util.Set;
 
-/**
- * Created by mefeakengin on 1/25/16.
- */
 public class CommandRemoveMachine {
 
     public static void apply (OptionSet result, Set<MachineSettings> machines) throws Exception {

@@ -9,9 +9,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Properties;
 
-/**
- * Created by emrah on 12/06/15.
- */
 public class SshExecutor {
 
     public static String exec(String user, String host, int port, String command, boolean breakProcess, String identityPath, boolean shouldPrint) throws Exception {

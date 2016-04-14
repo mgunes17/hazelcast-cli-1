@@ -6,9 +6,6 @@ import joptsimple.OptionSpec;
 
 import java.util.Arrays;
 
-/**
- * Created by mefeakengin on 1/19/16.
- */
 public class CommandOptions {
 
     static OptionParser optionParser = new OptionParser();

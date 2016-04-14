@@ -1,8 +1,5 @@
 package com.hazelcast.cli;
 
-/**
- * Created by mefeakengin on 1/19/16.
- */
 public class CommandHelp {
 
     public static void apply() {
