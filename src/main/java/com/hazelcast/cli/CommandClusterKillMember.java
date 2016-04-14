@@ -10,7 +10,7 @@ public class CommandClusterKillMember {
     public static void apply(OptionSet result, Set<MachineSettings> machines, ClusterSettings properties) throws Exception {
 
         if (!properties.isConnectedToCluster) {
-            System.out.println("Please first connect to a cluster by typing --cluster-connect.");
+            System.out.println("Please first connect to a cluster by typing create-cluster");
             return;
         }
 
@@ -24,6 +24,8 @@ public class CommandClusterKillMember {
 
         if (!result.has(CommandOptions.killMember)) {
             System.out.println("Please specify a nodename to kill");
+            System.out.println("Usage: kill-member [TAG]");
+            System.out.println("Type --help to see command options.");
             return;
         }
 

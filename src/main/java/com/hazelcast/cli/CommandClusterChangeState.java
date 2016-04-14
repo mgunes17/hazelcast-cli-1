@@ -16,41 +16,17 @@ public class CommandClusterChangeState {
         String hostIp = properties.hostIp;
         int port = properties.port;
         String identityPath = properties.identityPath;
-        String optionGroupName = properties.clusterName;
-        String optionPassword = properties.password;
-        String optionClusterPort = properties.memberPort;
+        String groupName = properties.clusterName;
+        String password = properties.password;
+        String clusterPort = properties.memberPort;
         OptionSpec changeState = com.hazelcast.cli.CommandOptions.changeClusterState;
 
         String stateParam = ((String) result.valueOf(changeState)).toLowerCase();
 
         if (!(stateParam.equals("active") || stateParam.equals("passive") || stateParam.equals("frozen"))) {
             System.out.println("Invalid change state parameter. State parameter should be one of active, passive or frozen \n");
+            return;
         }
-
-        String groupName;
-        if (result.has(optionGroupName)) {
-            groupName = (String) result.valueOf(optionGroupName);
-        } else {
-            groupName = "dev";
-            System.out.println("Group name is not specified, default group name is set to: " + groupName);
-        }
-
-        String password;
-        if (result.has(optionPassword)) {
-            password = (String) result.valueOf(optionPassword);
-        } else {
-            password = "dev-pass";
-            System.out.println("Group name is not specified, default password is set to: " + password);
-        }
-
-        String clusterPort;
-        if (result.has(optionClusterPort)) {
-            clusterPort = (String) result.valueOf(optionClusterPort);
-        } else {
-            clusterPort = "5701";
-            System.out.println("Group name is not specified, default clusterPort is set to: " + clusterPort);
-        }
-
         String changeClusterStateCmd = buildCommandChangeClusterState(hostIp, clusterPort, groupName, password, stateParam);
 
         SshExecutor.exec(user, hostIp, port, changeClusterStateCmd, false, identityPath, true);
