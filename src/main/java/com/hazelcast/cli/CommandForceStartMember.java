@@ -27,21 +27,19 @@ public class CommandForceStartMember {
             return;
         }
 
-        String nodeName = (String) result.valueOf(CommandOptions.forceStart);
-        String hostName = CLI.members.get(nodeName).getKey();
-        String memberForceStartPort = CLI.members.get(nodeName).getValue();
-        MachineSettings machineSettings = MachineSettings.getMachine(null, machines, hostName);
-        String user = machineSettings.userName;
-        String hostIp = machineSettings.hostIp;
+
+        String user = properties.user;
+        String hostIp = properties.hostIp;
         String groupName = properties.clusterName;
         String password = properties.password;
-        String identityPath = machineSettings.identityPath;
-        int port = machineSettings.sshPort;
+        String identityPath = properties.identityPath;
+        String memberForceStartPort = properties.memberPort;
+        int port = properties.port;
 
 
         String forceStartCmd = buildCommandForceStartMember(hostIp, memberForceStartPort, groupName, password);
 
-        SshExecutor.exec(user, hostIp, port, forceStartCmd, false, identityPath, false);
+        SshExecutor.exec(user, hostIp, port, forceStartCmd, false, identityPath, true);
 
     }
 

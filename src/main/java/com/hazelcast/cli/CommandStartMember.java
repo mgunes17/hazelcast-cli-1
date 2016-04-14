@@ -11,30 +11,26 @@ public class CommandStartMember {
 
     public static void apply(OptionSet result, ClusterSettings settings, Set<MachineSettings> machines) throws Exception {
 
-//        if(!properties.isConnectedToMachine) {
-//            System.out.println(
-//                "Please first connect to a machine by typing " +
-//                "--connect-machine --user <user> --ip <ip> --remote-path <absolute path for hazelcast> --identity-path <password path>.");
-//            return;
-//        }
-        if (machines.size() == 0) {
-            System.out.println(
-                    "You don't have any machines configured.\n" +
-                            "Please first add a host machine with the command '--add-machine'.");
+        if (!settings.isConnectedToCluster) {
+            System.out.println("Please first connect to a cluster by typing create-cluster");
             return;
         }
-        String machineName;
-        try {
-            machineName = (String) result.valueOf("start-member");
-        } catch (Exception e) {
+        if (machines.size() == 0) {
+            System.out.println("You don't have any machines configured.\n");
+            return;
+        }
+        String machineName = (String) result.valueOf("start-member");
+        if (machineName == null) {
             System.out.println("No machine name is given.");
+            System.out.println("Usage: start-member [host] -t [tag]");
             return;
         }
 
         MachineSettings machine = MachineSettings.getMachine(result, machines, machineName);
 
         if (machine == null) {
-            System.out.println("Please try again to start a member.");
+            System.out.println("Invalid hostname, please try again.");
+            System.out.println("Usage: start-member [host] -t [tag]");
             return;
         }
 
@@ -59,7 +55,8 @@ public class CommandStartMember {
             }
             String nodeName = (String) result.valueOf(com.hazelcast.cli.CommandOptions.optionNodeName);
             if (nodeName != null && CLI.members.get(nodeName) != null) {
-                System.out.println("This nodename already exist, please try again");
+                System.out.println("This tag already exist, please try again");
+                System.out.println("Usage: start-member [host] -t [tag]");
                 return;
             }
             if (nodeName == null) {
@@ -105,7 +102,7 @@ public class CommandStartMember {
             while (hostport == null) {
                 hostport = SshExecutor.exec(user, hostIp, port, "cat " + remotePath + "/ports/" + nodeName, true, identityPath, false);
             }
-            System.out.println("hostport = " + hostport);
+            SshExecutor.exec(user, hostIp, port, "rm " + remotePath + "/ports/" + nodeName, true, identityPath, false);
             CLI.members.put(nodeName, new AbstractMap.SimpleEntry(machineName, hostport));
 
             //            //TODO: Standardize "/log.out"

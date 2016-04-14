@@ -19,13 +19,13 @@ public class CommandOptions {
     static OptionSpec listMachines = optionParser.acceptsAll(Arrays.asList("list-machines"));
 
     static OptionSpec install = optionParser.acceptsAll(Arrays.asList("install", "i")).withOptionalArg().ofType(String.class);
-    static OptionSpec startMember = optionParser.acceptsAll(Arrays.asList("s", "start-member")).withOptionalArg().ofType(String.class);
+    static OptionSpec startMember = optionParser.acceptsAll(Arrays.asList("S", "start-member")).withOptionalArg().ofType(String.class);
     static OptionSpec startManagementCenter = optionParser.acceptsAll(Arrays.asList("start-mc", "management-center"));
     static OptionSpec version = optionParser.acceptsAll(Arrays.asList("v", "version")).withRequiredArg().ofType(String.class);
 
     //Options of operations
     static OptionSpec optionClusterName = optionParser.acceptsAll(Arrays.asList("c", "cluster-name")).withRequiredArg().ofType(String.class);
-    static OptionSpec optionNodeName = optionParser.acceptsAll(Arrays.asList("n", "node-name")).withRequiredArg().ofType(String.class);
+    static OptionSpec optionNodeName = optionParser.acceptsAll(Arrays.asList("t", "tag")).withRequiredArg().ofType(String.class);
     static OptionSpec optionConfigFile = optionParser.acceptsAll(Arrays.asList("C", "config-file")).withRequiredArg().ofType(String.class);
     static OptionSpec optionGroupName = optionParser.acceptsAll(Arrays.asList("g", "group-name")).withRequiredArg().ofType(String.class);
     static OptionSpec optionPassword = optionParser.acceptsAll(Arrays.asList("P", "password")).withRequiredArg().ofType(String.class);
@@ -48,7 +48,7 @@ public class CommandOptions {
     static OptionSpec changeClusterState = optionParser.acceptsAll(Arrays.asList("cluster-change-state")).withRequiredArg().ofType(String.class);
     static OptionSpec changeClusterSettings = optionParser.acceptsAll(Arrays.asList("cluster-change-settings")).withRequiredArg().ofType(String.class);
     static OptionSpec createCluster = optionParser.acceptsAll(Arrays.asList("create-cluster"));
-    static OptionSpec forceStart = optionParser.acceptsAll(Arrays.asList("force-start")).withOptionalArg().ofType(String.class);
+    static OptionSpec forceStart = optionParser.acceptsAll(Arrays.asList("force-start"));
     static OptionSpec clusterDisconnect = optionParser.acceptsAll(Arrays.asList("cluster-disconnect"));
 
     public OptionSet parse(String input) throws Exception {

@@ -5,9 +5,9 @@ import joptsimple.OptionSpec;
 
 public class CommandClusterChangeState {
 
-    public static void apply (OptionSet result, ClusterSettings properties) throws Exception {
+    public static void apply(OptionSet result, ClusterSettings properties) throws Exception {
 
-        if(!properties.isConnectedToCluster) {
+        if (!properties.isConnectedToCluster) {
             System.out.println("Please first connect to a cluster by typing --cluster-connect.");
             return;
         }
@@ -16,10 +16,9 @@ public class CommandClusterChangeState {
         String hostIp = properties.hostIp;
         int port = properties.port;
         String identityPath = properties.identityPath;
-
-        OptionSpec optionGroupName = com.hazelcast.cli.CommandOptions.optionGroupName;
-        OptionSpec optionPassword = com.hazelcast.cli.CommandOptions.optionPassword;
-        OptionSpec optionClusterPort = com.hazelcast.cli.CommandOptions.optionClusterPort;
+        String optionGroupName = properties.clusterName;
+        String optionPassword = properties.password;
+        String optionClusterPort = properties.memberPort;
         OptionSpec changeState = com.hazelcast.cli.CommandOptions.changeClusterState;
 
         String stateParam = ((String) result.valueOf(changeState)).toLowerCase();
@@ -54,7 +53,7 @@ public class CommandClusterChangeState {
 
         String changeClusterStateCmd = buildCommandChangeClusterState(hostIp, clusterPort, groupName, password, stateParam);
 
-        SshExecutor.exec(user, hostIp, port, changeClusterStateCmd, false, identityPath, false);
+        SshExecutor.exec(user, hostIp, port, changeClusterStateCmd, false, identityPath, true);
 
     }
 
