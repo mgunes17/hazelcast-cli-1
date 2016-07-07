@@ -77,16 +77,16 @@ public class CLI {
                         CommandInstall.apply(result, hosts);
                     } else if (result.has(commandOptions.startMember)) {
                         CommandStartMember.apply(result, settings, hosts);
-//                    } else if (result.has(commandOptions.addMachine)) {
-//                        CommandAddMachine.apply(reader, hosts, (String) result.valueOf("add-machine"));
+//                    } else if (result.has(commandOptions.host)) {
+//                        CommandAddMachine.apply(reader, hosts, (String) result.valueOf("add-host"));
                     } else if (result.has(commandOptions.removeMachine)) {
                         CommandRemoveMachine.apply(result, hosts);
                     } else if (result.has(commandOptions.listMachines)) {
                         CommandListMachines.apply(hosts);
                     } else if (result.has(commandOptions.setCredentials)) {
-                        settings = CommandClusterConnect.apply(result, reader);
+                        CommandClusterConnect.apply(result, reader);
                     } else if (result.has(commandOptions.clusterDisconnect)) {
-                        settings = CommandClusterDisconnect.apply();
+                        CommandClusterDisconnect.apply();
                     } else if (result.has(commandOptions.shutdownCluster)) {
                         CommandClusterShutdown.apply(result, settings);
                     } else if (result.has(commandOptions.killMember)) {
@@ -96,7 +96,7 @@ public class CLI {
                     } else if (result.has(commandOptions.listMember)) {
                         CommandClusterListMember.apply(result, settings);
                     } else if (result.has(commandOptions.listMemberTags)) {
-                        CommandClusterListMember.apply(result, settings);
+                        CommandListMemberTags.apply();
                     } else if (result.has(commandOptions.getClusterState)) {
                         CommandClusterGetState.apply(result, settings);
                     } else if (result.has(commandOptions.changeClusterState)) {
@@ -142,9 +142,13 @@ public class CLI {
                         settings.identityPath = machineSetting.identityPath;
                         settings.port = machineSetting.sshPort;
                         settings.memberPort = str.split(" ")[0];
+                        CLI.firstMember.put(settings.clusterName, machineSetting.hostName);
                     }
                 }
             } catch (Exception e) {
+                if (files.get(machineSetting.hostName) == null) {
+                    files.put(machineSetting.hostName, File.createTempFile("members", ".tmp"));
+                }
             }
         }
     }

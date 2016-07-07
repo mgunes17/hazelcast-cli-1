@@ -9,8 +9,7 @@ public class CommandClusterChangeSettings {
 
     public static void apply(OptionSet result, ConsoleReader reader, Set<HostSettings> machines, ClusterSettings properties) throws Exception {
 
-        if (!properties.isConnectedToCluster) {
-            System.out.println("Please first connect to a cluster by typing create-cluster");
+        if (!ControlUtil.checkCredentials()) {
             return;
         }
 

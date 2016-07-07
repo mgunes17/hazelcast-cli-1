@@ -9,21 +9,12 @@ public class CommandClusterKillMember {
 
     public static void apply(OptionSet result, Set<HostSettings> machines, ClusterSettings properties) throws Exception {
 
-        if (!properties.isConnectedToCluster) {
-            System.out.println("Please first connect to a cluster by typing create-cluster");
+        if (!ControlUtil.checkCredentials()) {
             return;
         }
 
-//        String user = properties.user;
-//        String hostIp = properties.hostIp;
-//        String clusterPort = properties.memberPort;
-//        String groupName = properties.clusterName;
-//        String password = properties.password;
-//        int port = properties.port;
-//        String identityPath = properties.identityPath;
-
         if (!result.has(CommandOptions.killMember)) {
-            System.out.println("Please specify a nodename to kill");
+            System.out.println("Please specify a member tag");
             System.out.println("Usage: kill-member [TAG]");
             System.out.println("Type --help to see command options.");
             return;

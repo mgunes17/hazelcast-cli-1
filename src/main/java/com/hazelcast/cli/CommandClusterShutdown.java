@@ -6,8 +6,7 @@ public class CommandClusterShutdown {
 
     public static void apply(OptionSet result, ClusterSettings properties) throws Exception {
 
-        if (!properties.isConnectedToCluster) {
-            System.out.println("Please first connect to a cluster by typing create-cluster");
+        if (!ControlUtil.checkCredentials()) {
             return;
         }
 

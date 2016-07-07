@@ -17,8 +17,7 @@ public class CommandStartMember {
 
     public static void apply(OptionSet result, ClusterSettings settings, Set<HostSettings> machines) throws Exception {
 
-        if (!settings.isConnectedToCluster) {
-            System.out.println("Please first set credentials by typing set-credentials [group-name] [password]");
+        if (!ControlUtil.checkCredentials()) {
             return;
         }
         if (machines.size() == 0) {
@@ -93,7 +92,7 @@ public class CommandStartMember {
             Runtime.getRuntime().exec(cmd);
 
             try {
-                Thread.sleep(2000);
+                Thread.sleep(1000);
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
@@ -104,8 +103,8 @@ public class CommandStartMember {
 
             //TODO: can I assume that java is already installed to Amazon EC2 ?
             String pid = SshExecutor.exec(user, hostIp, port, startCmd, true, identityPath, false);
-            String hostport = null;
-            while (hostport == null) {
+            String hostport = "";
+            while (hostport.equals("") || hostport.equals("null")) {
                 hostport = SshExecutor.exec(user, hostIp, port, "cat " + remotePath + "/ports/" + nodeName, true, identityPath, false);
             }
             SshExecutor.exec(user, hostIp, port, "rm " + remotePath + "/ports/" + nodeName, true, identityPath, false);
