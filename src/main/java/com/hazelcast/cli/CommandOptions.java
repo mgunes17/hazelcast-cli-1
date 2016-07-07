@@ -30,7 +30,7 @@ public class CommandOptions {
     static OptionSpec getClusterState = optionParser.acceptsAll(Arrays.asList("cluster-state"));
     static OptionSpec changeClusterState = optionParser.acceptsAll(Arrays.asList("cluster-change-state")).withOptionalArg().ofType(String.class);
     static OptionSpec changeClusterSettings = optionParser.acceptsAll(Arrays.asList("cluster-change-settings")).withOptionalArg().ofType(String.class);
-    static OptionSpec createCluster = optionParser.acceptsAll(Arrays.asList("create-cluster"));
+    static OptionSpec setCredentials = optionParser.acceptsAll(Arrays.asList("set-credentials"));
     static OptionSpec forceStart = optionParser.acceptsAll(Arrays.asList("cluster-force-start"));
     static OptionSpec clusterDisconnect = optionParser.acceptsAll(Arrays.asList("cluster-disconnect"));
 

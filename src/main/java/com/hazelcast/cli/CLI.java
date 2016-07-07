@@ -16,9 +16,13 @@
 
 package com.hazelcast.cli;
 
+import com.jcraft.jsch.JSchException;
+import com.pastdev.jsch.DefaultSessionFactory;
+import com.pastdev.jsch.scp.ScpFile;
 import jline.console.ConsoleReader;
 import joptsimple.OptionSet;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.AbstractMap;
 import java.util.Enumeration;
@@ -33,6 +37,9 @@ public class CLI {
     private static ConsoleReader reader;
     public static Map<String, String> firstMember = new HashMap<String, String>();
     public static Map<String, AbstractMap.SimpleEntry<String, String>> members = new HashMap<String, AbstractMap.SimpleEntry<String, String>>();
+    public static Set<MachineSettings> machines;
+    public static HashMap<String, File> files = new HashMap<String, File>();
+    public static HashMap<String, DefaultSessionFactory> sessions = new HashMap<String, DefaultSessionFactory>();
 
     public static void main(String[] args) throws Exception {
 
@@ -40,7 +47,7 @@ public class CLI {
         System.out.println((new HazelcastArt()).art);
         System.out.println(
                 "Welcome to Hazelcast command line interface.\n" +
-                        "Type --help to see command options.");
+                        "Type help to see command options.");
         mainConsole();
 
     }
@@ -50,8 +57,9 @@ public class CLI {
         Boolean open = true;
         CommandOptions commandOptions = new CommandOptions();
         ClusterSettings settings = new ClusterSettings();
-        Set<MachineSettings> machines = new HashSet<MachineSettings>();
+        machines = new HashSet<MachineSettings>();
         addMachines(machines);
+        readMemberInfoFile();
         while (open) {
 
             try {
@@ -75,8 +83,8 @@ public class CLI {
                         CommandRemoveMachine.apply(result, machines);
                     } else if (result.has(commandOptions.listMachines)) {
                         CommandListMachines.apply(machines);
-                    } else if (result.has(commandOptions.createCluster)) {
-                        settings = CommandClusterConnect.apply(reader);
+                    } else if (result.has(commandOptions.setCredentials)) {
+                        settings = CommandClusterConnect.apply(result, reader);
                     } else if (result.has(commandOptions.clusterDisconnect)) {
                         settings = CommandClusterDisconnect.apply();
                     } else if (result.has(commandOptions.shutdownCluster)) {
@@ -105,6 +113,41 @@ public class CLI {
             } catch (Exception e) {
 //                System.out.println("Please try again.");
             }
+        }
+    }
+
+    private static void readMemberInfoFile() throws Exception {
+
+        for (MachineSettings machineSetting : machines) {
+            DefaultSessionFactory defaultSessionFactory = new DefaultSessionFactory(
+                    machineSetting.userName, machineSetting.hostIp, machineSetting.sshPort);
+            try {
+//                defaultSessionFactory.setKnownHosts( knownHosts );
+                defaultSessionFactory.setIdentityFromPrivateKey(machineSetting.identityPath);
+            } catch (JSchException e) {
+                System.out.println("error");
+//                Assume.assumeNoException( e );
+            }
+            sessions.put(machineSetting.machineName, defaultSessionFactory);
+//            File toFile = new File(dir, toFilename);
+            try {
+                ScpFile to = new ScpFile(defaultSessionFactory,
+                        "/home/ubuntu/hazelcast/members.txt");
+                File file = File.createTempFile("members", ".tmp");
+                to.copyTo(file);
+                files.put(machineSetting.machineName, file);
+            } catch (Exception e) {
+            }
+//            String command = "scp -t " + machineSetting.remotePath + "/hazelcast/members.txt";
+//            String out = SshExecutor.exec(
+//                    machineSetting.userName,
+//                    machineSetting.hostIp,
+//                    machineSetting.sshPort,
+//                    command,
+//                    false,
+//                    machineSetting.identityPath,
+//                    false);
+//            System.out.println(out);
         }
     }
 

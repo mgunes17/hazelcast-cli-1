@@ -152,6 +152,12 @@
             <artifactId>hazelcast</artifactId>
             <version>${hazelcast.version}</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.pastdev/jsch-extension -->
+        <dependency>
+            <groupId>com.pastdev</groupId>
+            <artifactId>jsch-extension</artifactId>
+            <version>0.1.6</version>
+        </dependency>
     </dependencies>
     <repositories>
         <repository>

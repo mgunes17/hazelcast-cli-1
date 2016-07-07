@@ -48,7 +48,7 @@ public class ClusterSettings {
         return settings;
     }
 
-    public static ClusterSettings connectToCluster(ConsoleReader reader) throws Exception {
+    public static ClusterSettings connectToCluster(OptionSet result, ConsoleReader reader) throws Exception {
         ClusterSettings settings = new ClusterSettings();
         //TODO: Do we want cluster name? How so?
 //        settings.clusterName = "";
@@ -58,7 +58,7 @@ public class ClusterSettings {
 //                System.out.println("Please enter a valid cluster name");
 //            }
 //        }
-        setRemoteSettings(reader, settings);
+        setRemoteSettings(result, reader, settings);
         settings.isConnectedToCluster = true;
         return settings;
     }
@@ -100,7 +100,7 @@ public class ClusterSettings {
         }
     }
 
-    private static void setRemoteSettings(ConsoleReader reader, ClusterSettings settings) throws Exception {
+    private static void setRemoteSettings(OptionSet result, ConsoleReader reader, ClusterSettings settings) throws Exception {
 //        settings.localPath = System.getProperty("user.home");
 //        System.out.println("Please set settings for remote host.");
 //        settings.user = "";
@@ -113,21 +113,21 @@ public class ClusterSettings {
 
 //        settings.user = reader.readLine("User name of the remote machine: ");
 //        settings.identityPath = reader.readLine("Identity path to connect to remote machine: ");
+//        settings.clusterName = "";
+//        settings.clusterName = reader.readLine("Cluster name/group name: ");
+//        if (settings.clusterName.equals("")) {
+//            settings.clusterName = "dev";
+//            System.out.println("The cluster name is set to the default \"dev\"");
+//        }
 
-        settings.clusterName = "";
-        settings.clusterName = reader.readLine("Cluster name/group name: ");
-        if (settings.clusterName.equals("")) {
-            settings.clusterName = "dev";
-            System.out.println("The cluster name is set to the default \"dev\"");
-        }
-
-        settings.password = "";
-        settings.password = reader.readLine("Password of the cluster: ", '*');
-        if (settings.password.equals("")) {
-            settings.password = "dev-pass";
-            System.out.println("The password is set to the default \"dev-pass\"");
-        }
-
+//        settings.password = "";
+//        settings.password = reader.readLine("Password of the cluster: ", '*');
+//        if (settings.password.equals("")) {
+//            settings.password = "dev-pass";
+//            System.out.println("The password is set to the default \"dev-pass\"");
+//        }
+        settings.clusterName = (String) result.nonOptionArguments().get(0);
+        settings.password = (String) result.nonOptionArguments().get(1);
 //        settings.hostIp = "";
 //        while (settings.hostIp.equals("")) {
 //            settings.hostIp = reader.readLine("IP of the member node: ");
@@ -157,7 +157,7 @@ public class ClusterSettings {
 //            System.out.println("The member port is set to the default \"5701\"");
 //        }
 
-        System.out.println("Properties for connecting to a cluster set.");
+        System.out.println("Credentials for connecting to a cluster set.");
         //TODO: Make sure to actually connect to a cluster
 //        System.out.println("Actually connected to a cluster.");
 

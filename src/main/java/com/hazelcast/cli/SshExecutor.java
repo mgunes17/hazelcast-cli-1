@@ -40,12 +40,12 @@ public class SshExecutor {
             channel.connect();
 //            System.out.println("Connection situation : " + channel.isConnected());
 
-            String out = null;
+            String out = "";
             while ((msg = in.readLine()) != null) {
                 if (shouldPrint) {
                     System.out.println(msg);
                 }
-                out = msg;
+                out += msg;
                 //How does the breakProcess work?
                 //Is the first msg the PID? How do we make sure that?
                 if (breakProcess) {

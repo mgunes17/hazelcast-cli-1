@@ -8,11 +8,11 @@ public class CommandHelp {
                         "This command line interface is created for managing and provisioning of hazelcast clusters and members.\n" +
                         "\n" +
                         "Main Operations \n" +
-                        "remove-machine                    : Removes a machine from the machines list.\n" +
-                        "list-machines                     : Lists added machines.\n" +
+                        "remove-host                       : Removes a host from the hosts list.\n" +
+                        "list-hosts                        : Lists added hosts.\n" +
                         "exit, --e                         : Exits from the program.\n" +
                         "help, --h                         : Lists the valid options.\n" +
-                        "install, --i                      : Downloads and extracts hazelcast with the given version. Version is required.\n" +
+                        "install [HOST] -v [VERSION]       : Downloads and extracts hazelcast with the given version to given host. Version and host are required.\n" +
                         "start-member [HOST] -t [TAG]      : Starts a member from a hazelcast configuration .xml file given with the local file path.\n" +
                         "                                     HOST name, MEMBER TAG are required.\n" +
                         "\n" +

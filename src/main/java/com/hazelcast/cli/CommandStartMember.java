@@ -1,9 +1,15 @@
 package com.hazelcast.cli;
 
+import com.pastdev.jsch.scp.ScpFile;
 import joptsimple.OptionSet;
+import org.apache.commons.io.FileUtils;
 
+import java.io.File;
 import java.util.AbstractMap;
 import java.util.Set;
+
+import static com.hazelcast.cli.CLI.files;
+import static com.hazelcast.cli.CLI.sessions;
 
 public class CommandStartMember {
 
@@ -12,7 +18,7 @@ public class CommandStartMember {
     public static void apply(OptionSet result, ClusterSettings settings, Set<MachineSettings> machines) throws Exception {
 
         if (!settings.isConnectedToCluster) {
-            System.out.println("Please first connect to a cluster by typing create-cluster");
+            System.out.println("Please first set credentials by typing set-credentials [group-name] [password]");
             return;
         }
         if (machines.size() == 0) {
@@ -117,7 +123,11 @@ public class CommandStartMember {
             //            Runtime.getRuntime().exec(printLog);
 
             System.out.println("Instance started : " + pid);
-
+            File file = files.get(machineName);
+            FileUtils.writeStringToFile(file, hostport + " " + nodeName + System.lineSeparator(), true);
+            ScpFile scpFile = new ScpFile(sessions.get(machineName),
+                    "/home", "ubuntu", "hazelcast", "members.txt");
+            scpFile.copyFrom(file);
         } catch (Exception e) {
             System.out.println("Please try starting a member again.");
         }
@@ -142,7 +152,7 @@ public class CommandStartMember {
 //                path + "/hazelcast/bin/log-" + nodeName + ".null 2> " +
 //                path + "/hazelcast/bin/log-" + nodeName + ".out < /dev/null & echo $!";
         return "java -cp \"" + path + "/hazelcast/hazelcast.jar\" " +
-                "-Dhazelcast.config=" + path + "/hazelcast/bin/hazelcast-" + nodeName + ".xml " + "-Dmember.tag=" + nodeName + " " +
+                "-Dhazelcast.config=" + path + "/hazelcast/bin/hazelcast-" + nodeName + ".xml " + "-Dprint.port=" + nodeName + " " +
                 "com.hazelcast.core.server.StartServer & echo $!";
     }
 
