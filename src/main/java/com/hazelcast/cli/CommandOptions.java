@@ -26,7 +26,8 @@ public class CommandOptions {
     //Options for cluster operations
     static OptionSpec shutdownCluster = optionParser.acceptsAll(Arrays.asList("cluster-shutdown", "S"));
     static OptionSpec killMember = optionParser.acceptsAll(Arrays.asList("k", "kill-member")).withOptionalArg().ofType(String.class);
-    static OptionSpec listMember = optionParser.acceptsAll(Arrays.asList("l", "list-member"));
+    static OptionSpec listMember = optionParser.acceptsAll(Arrays.asList("l", "list-members"));
+    static OptionSpec listMemberTags = optionParser.acceptsAll(Arrays.asList("l", "list-member-tags"));
     static OptionSpec getClusterState = optionParser.acceptsAll(Arrays.asList("cluster-state"));
     static OptionSpec changeClusterState = optionParser.acceptsAll(Arrays.asList("cluster-change-state")).withOptionalArg().ofType(String.class);
     static OptionSpec changeClusterSettings = optionParser.acceptsAll(Arrays.asList("cluster-change-settings")).withOptionalArg().ofType(String.class);

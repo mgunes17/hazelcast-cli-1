@@ -21,6 +21,7 @@ import com.pastdev.jsch.DefaultSessionFactory;
 import com.pastdev.jsch.scp.ScpFile;
 import jline.console.ConsoleReader;
 import joptsimple.OptionSet;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.InputStream;
@@ -40,6 +41,7 @@ public class CLI {
     public static Set<HostSettings> hosts = new HashSet<HostSettings>();
     public static HashMap<String, File> files = new HashMap<String, File>();
     public static HashMap<String, DefaultSessionFactory> sessions = new HashMap<String, DefaultSessionFactory>();
+    public static ClusterSettings settings;
 
     public static void main(String[] args) throws Exception {
 
@@ -55,7 +57,7 @@ public class CLI {
 
         Boolean open = true;
         CommandOptions commandOptions = new CommandOptions();
-        ClusterSettings settings = new ClusterSettings();
+        settings = new ClusterSettings();
         addHosts(hosts);
         readMemberInfoFile();
         while (open) {
@@ -92,6 +94,8 @@ public class CLI {
                     } else if (result.has(commandOptions.forceStart)) {
                         CommandForceStartMember.apply(result, hosts, settings);
                     } else if (result.has(commandOptions.listMember)) {
+                        CommandClusterListMember.apply(result, settings);
+                    } else if (result.has(commandOptions.listMemberTags)) {
                         CommandClusterListMember.apply(result, settings);
                     } else if (result.has(commandOptions.getClusterState)) {
                         CommandClusterGetState.apply(result, settings);
@@ -130,6 +134,16 @@ public class CLI {
                 File file = File.createTempFile("members", ".tmp");
                 to.copyTo(file);
                 files.put(machineSetting.hostName, file);
+                for (String str : FileUtils.readLines(file)) {
+                    CLI.members.put(str.split(" ")[1], new AbstractMap.SimpleEntry(machineSetting.hostName, str.split(" ")[0]));
+                    if (CLI.firstMember.get(settings.clusterName) == null) {
+                        settings.user = machineSetting.userName;
+                        settings.hostIp = machineSetting.hostIp;
+                        settings.identityPath = machineSetting.identityPath;
+                        settings.port = machineSetting.sshPort;
+                        settings.memberPort = str.split(" ")[0];
+                    }
+                }
             } catch (Exception e) {
             }
         }
