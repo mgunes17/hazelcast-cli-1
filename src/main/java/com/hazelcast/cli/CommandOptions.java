@@ -12,7 +12,7 @@ public class CommandOptions {
     static OptionSpec help = optionParser.acceptsAll(Arrays.asList("help", "h"));
     static OptionSpec exit = optionParser.acceptsAll(Arrays.asList("exit", "e"));
     static OptionSpec removeMachine = optionParser.acceptsAll(Arrays.asList("remove-machine")).withOptionalArg().ofType(String.class);
-    static OptionSpec listMachines = optionParser.acceptsAll(Arrays.asList("list-machines"));
+    static OptionSpec listMachines = optionParser.acceptsAll(Arrays.asList("list-hosts"));
 
     static OptionSpec install = optionParser.acceptsAll(Arrays.asList("install", "i")).withOptionalArg().ofType(String.class);
     static OptionSpec startMember = optionParser.acceptsAll(Arrays.asList("S", "start-member")).withOptionalArg().ofType(String.class);

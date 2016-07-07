@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class CommandInstall {
 
-    public static void apply (OptionSet result, Set<MachineSettings> machines) throws Exception {
+    public static void apply (OptionSet result, Set<HostSettings> machines) throws Exception {
 
 //        if(!properties.isConnectedToMachine) {
 //            System.out.println("Please first connect to a machine by typing " +
@@ -16,7 +16,7 @@ public class CommandInstall {
 //        }
         if (machines.size() == 0) {
             System.out.println(
-                    "You don't have any machines configured.\n" +
+                    "You don't have any hosts configured.\n" +
                     "Please first add a host machine with the command '--add-machine'.");
             return;
         }
@@ -28,7 +28,7 @@ public class CommandInstall {
             return;
         }
 
-        MachineSettings machine = MachineSettings.getMachine(result, machines, machineName);
+        HostSettings machine = HostSettings.getMachine(result, machines, machineName);
 
         if (machine == null) {
             return;

@@ -15,14 +15,14 @@ public class CommandStartMember {
 
     static int counter = 1;
 
-    public static void apply(OptionSet result, ClusterSettings settings, Set<MachineSettings> machines) throws Exception {
+    public static void apply(OptionSet result, ClusterSettings settings, Set<HostSettings> machines) throws Exception {
 
         if (!settings.isConnectedToCluster) {
             System.out.println("Please first set credentials by typing set-credentials [group-name] [password]");
             return;
         }
         if (machines.size() == 0) {
-            System.out.println("You don't have any machines configured.\n");
+            System.out.println("You don't have any hosts configured.\n");
             return;
         }
         String machineName = (String) result.valueOf("start-member");
@@ -32,7 +32,7 @@ public class CommandStartMember {
             return;
         }
 
-        MachineSettings machine = MachineSettings.getMachine(result, machines, machineName);
+        HostSettings machine = HostSettings.getMachine(result, machines, machineName);
 
         if (machine == null) {
             System.out.println("Invalid hostname, please try again.");

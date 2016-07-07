@@ -6,14 +6,14 @@ import java.util.Set;
 
 public class CommandRemoveMachine {
 
-    public static void apply (OptionSet result, Set<MachineSettings> machines) throws Exception {
+    public static void apply (OptionSet result, Set<HostSettings> machines) throws Exception {
 
         boolean machineRemoved = false;
         try {
             String machineName = (String) result.valueOf("remove-machine");
 
-            for (MachineSettings machine : machines) {
-                if(machine.machineName.equals(machineName)) {
+            for (HostSettings machine : machines) {
+                if(machine.hostName.equals(machineName)) {
                     machines.remove(machine);
                     machineRemoved = true;
                     break;
@@ -35,7 +35,7 @@ public class CommandRemoveMachine {
 
         } catch (Exception e) {
             //TODO: Can there be other exceptions?
-            System.out.println("Please enter a valid machine name from the list of machines.");
+            System.out.println("Please enter a valid machine name from the list of hosts.");
         }
 
     }

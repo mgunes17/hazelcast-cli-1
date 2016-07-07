@@ -37,7 +37,7 @@ public class CLI {
     private static ConsoleReader reader;
     public static Map<String, String> firstMember = new HashMap<String, String>();
     public static Map<String, AbstractMap.SimpleEntry<String, String>> members = new HashMap<String, AbstractMap.SimpleEntry<String, String>>();
-    public static Set<MachineSettings> machines;
+    public static Set<HostSettings> hosts = new HashSet<HostSettings>();
     public static HashMap<String, File> files = new HashMap<String, File>();
     public static HashMap<String, DefaultSessionFactory> sessions = new HashMap<String, DefaultSessionFactory>();
 
@@ -49,7 +49,6 @@ public class CLI {
                 "Welcome to Hazelcast command line interface.\n" +
                         "Type help to see command options.");
         mainConsole();
-
     }
 
     private static void mainConsole() throws Exception {
@@ -57,8 +56,7 @@ public class CLI {
         Boolean open = true;
         CommandOptions commandOptions = new CommandOptions();
         ClusterSettings settings = new ClusterSettings();
-        machines = new HashSet<MachineSettings>();
-        addMachines(machines);
+        addHosts(hosts);
         readMemberInfoFile();
         while (open) {
 
@@ -74,15 +72,15 @@ public class CLI {
                 } else {
                     if (result.has(commandOptions.install)) {
                         //TODO: Handle properties set for local/remote
-                        CommandInstall.apply(result, machines);
+                        CommandInstall.apply(result, hosts);
                     } else if (result.has(commandOptions.startMember)) {
-                        CommandStartMember.apply(result, settings, machines);
+                        CommandStartMember.apply(result, settings, hosts);
 //                    } else if (result.has(commandOptions.addMachine)) {
-//                        CommandAddMachine.apply(reader, machines, (String) result.valueOf("add-machine"));
+//                        CommandAddMachine.apply(reader, hosts, (String) result.valueOf("add-machine"));
                     } else if (result.has(commandOptions.removeMachine)) {
-                        CommandRemoveMachine.apply(result, machines);
+                        CommandRemoveMachine.apply(result, hosts);
                     } else if (result.has(commandOptions.listMachines)) {
-                        CommandListMachines.apply(machines);
+                        CommandListMachines.apply(hosts);
                     } else if (result.has(commandOptions.setCredentials)) {
                         settings = CommandClusterConnect.apply(result, reader);
                     } else if (result.has(commandOptions.clusterDisconnect)) {
@@ -90,9 +88,9 @@ public class CLI {
                     } else if (result.has(commandOptions.shutdownCluster)) {
                         CommandClusterShutdown.apply(result, settings);
                     } else if (result.has(commandOptions.killMember)) {
-                        CommandClusterKillMember.apply(result, machines, settings);
+                        CommandClusterKillMember.apply(result, hosts, settings);
                     } else if (result.has(commandOptions.forceStart)) {
-                        CommandForceStartMember.apply(result, machines, settings);
+                        CommandForceStartMember.apply(result, hosts, settings);
                     } else if (result.has(commandOptions.listMember)) {
                         CommandClusterListMember.apply(result, settings);
                     } else if (result.has(commandOptions.getClusterState)) {
@@ -100,7 +98,7 @@ public class CLI {
                     } else if (result.has(commandOptions.changeClusterState)) {
                         CommandClusterChangeState.apply(result, settings);
                     } else if (result.has(commandOptions.changeClusterSettings)) {
-                        CommandClusterChangeSettings.apply(result, reader, machines, settings);
+                        CommandClusterChangeSettings.apply(result, reader, hosts, settings);
                     } else if (result.has(commandOptions.startManagementCenter)) {
                         CommandManagementCenterStart.apply(result, settings);
                     } else if (result.has(commandOptions.exit)) {
@@ -111,47 +109,33 @@ public class CLI {
                     }
                 }
             } catch (Exception e) {
-//                System.out.println("Please try again.");
             }
         }
     }
 
     private static void readMemberInfoFile() throws Exception {
 
-        for (MachineSettings machineSetting : machines) {
+        for (HostSettings machineSetting : hosts) {
             DefaultSessionFactory defaultSessionFactory = new DefaultSessionFactory(
                     machineSetting.userName, machineSetting.hostIp, machineSetting.sshPort);
             try {
-//                defaultSessionFactory.setKnownHosts( knownHosts );
                 defaultSessionFactory.setIdentityFromPrivateKey(machineSetting.identityPath);
             } catch (JSchException e) {
                 System.out.println("error");
-//                Assume.assumeNoException( e );
             }
-            sessions.put(machineSetting.machineName, defaultSessionFactory);
-//            File toFile = new File(dir, toFilename);
+            sessions.put(machineSetting.hostName, defaultSessionFactory);
             try {
                 ScpFile to = new ScpFile(defaultSessionFactory,
                         "/home/ubuntu/hazelcast/members.txt");
                 File file = File.createTempFile("members", ".tmp");
                 to.copyTo(file);
-                files.put(machineSetting.machineName, file);
+                files.put(machineSetting.hostName, file);
             } catch (Exception e) {
             }
-//            String command = "scp -t " + machineSetting.remotePath + "/hazelcast/members.txt";
-//            String out = SshExecutor.exec(
-//                    machineSetting.userName,
-//                    machineSetting.hostIp,
-//                    machineSetting.sshPort,
-//                    command,
-//                    false,
-//                    machineSetting.identityPath,
-//                    false);
-//            System.out.println(out);
         }
     }
 
-    private static void addMachines(Set<MachineSettings> machines) throws Exception {
+    private static void addHosts(Set<HostSettings> machines) throws Exception {
         HashMap<String, String> hashMap = new HashMap();
         Set<String> set = new HashSet();
         Properties prop = new Properties();
@@ -171,12 +155,12 @@ public class CLI {
             String hostIp = hashMap.get(key + ".ip");
             String remotePath = hashMap.get(key + ".remotePath");
             String identityPath = hashMap.get(key + ".identityPath");
-            MachineSettings machine = new MachineSettings(key, userName, hostIp, remotePath, identityPath);
+            HostSettings machine = new HostSettings(key, userName, hostIp, remotePath, identityPath);
 
             System.out.println("Connection settings set for " + machine.userName + "@" + machine.hostIp);
             String message = SshExecutor.exec(machine.userName, machine.hostIp, 22, "", false, machine.identityPath, false);
             if ((message == null) || (!message.equals("exception"))) {
-                System.out.println("Machine " + machine.machineName + " is added.");
+                System.out.println("Machine " + machine.hostName + " is added.");
                 machines.add(machine);
             } else {
                 System.out.println("Could not connect to the machine.");

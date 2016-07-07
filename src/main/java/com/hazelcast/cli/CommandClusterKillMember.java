@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class CommandClusterKillMember {
 
-    public static void apply(OptionSet result, Set<MachineSettings> machines, ClusterSettings properties) throws Exception {
+    public static void apply(OptionSet result, Set<HostSettings> machines, ClusterSettings properties) throws Exception {
 
         if (!properties.isConnectedToCluster) {
             System.out.println("Please first connect to a cluster by typing create-cluster");
@@ -32,13 +32,13 @@ public class CommandClusterKillMember {
         String nodeName = (String) result.valueOf(CommandOptions.killMember);
         String hostName = CLI.members.get(nodeName).getKey();
         String memberKillPort = CLI.members.get(nodeName).getValue();
-        MachineSettings machineSettings = MachineSettings.getMachine(null, machines, hostName);
-        String user = machineSettings.userName;
-        String hostIp = machineSettings.hostIp;
+        HostSettings hostSettings = HostSettings.getMachine(null, machines, hostName);
+        String user = hostSettings.userName;
+        String hostIp = hostSettings.hostIp;
         String groupName = properties.clusterName;
         String password = properties.password;
-        String identityPath = machineSettings.identityPath;
-        int port = machineSettings.sshPort;
+        String identityPath = hostSettings.identityPath;
+        int port = hostSettings.sshPort;
 
 
         String killNodeCmd = buildCommandKillMember(hostIp, memberKillPort, groupName, password);

@@ -8,7 +8,7 @@ import java.util.Set;
 
 public class CommandAddMachine {
 
-    public static void apply(ConsoleReader reader, Set<MachineSettings> machines, String hostName) throws Exception {
+    public static void apply(ConsoleReader reader, Set<HostSettings> machines, String hostName) throws Exception {
         try {
             String machineName = "";
             if (hostName != null) {
@@ -18,12 +18,12 @@ public class CommandAddMachine {
             while (machineName.equals("") || machineNameExisting) {
                 machineName = reader.readLine("Please give a unique name to your remote machine: ");
                 machineNameExisting = false;
-                for (MachineSettings machine : machines) {
-                    if (machineName.equals(machine.machineName)) {
+                for (HostSettings machine : machines) {
+                    if (machineName.equals(machine.hostName)) {
                         machineNameExisting = true;
                     }
                 }
-//                if (machineName.equals("")) {
+//                if (hostName.equals("")) {
 //                    System.out.println("Please enter a valid machine name");
 //                } else if (machineNameExisting) {
 //                    System.out.println("The machine name is already in use");
@@ -71,12 +71,12 @@ public class CommandAddMachine {
             String identityPath = prop.getProperty(machineName + ".identityPath");
 
 
-            MachineSettings machine = new MachineSettings(machineName, userName, hostIp, remotePath, identityPath);
+            HostSettings machine = new HostSettings(machineName, userName, hostIp, remotePath, identityPath);
 
             System.out.println("Connection settings set for " + machine.userName + "@" + machine.hostIp);
             String message = SshExecutor.exec(machine.userName, machine.hostIp, 22, "", false, machine.identityPath, false);
             if ((message == null) || (!message.equals("exception"))) {
-                System.out.println("Machine " + machine.machineName + " is added.");
+                System.out.println("Machine " + machine.hostName + " is added.");
                 machines.add(machine);
             } else {
                 System.out.println("Could not connect to the machine.");
