@@ -32,7 +32,7 @@ public class CommandSetMasterMember {
         properties.port = hostSettings.sshPort;
         properties.identityPath = hostSettings.identityPath;
         properties.memberPort = CLI.members.get(memberName).getValue();
-        firstMember.put(properties.clusterName, properties.clusterName);
+        firstMember.put(properties.clusterName, memberName);
         System.out.println("Master member configured successfully");
     }
 
