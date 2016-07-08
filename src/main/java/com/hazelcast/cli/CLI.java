@@ -89,6 +89,8 @@ public class CLI {
                         CommandClusterDisconnect.apply();
                     } else if (result.has(commandOptions.shutdownCluster)) {
                         CommandClusterShutdown.apply(result, settings);
+                    } else if (result.has(commandOptions.CliInfo)) {
+                        CommandCliInfo.apply(result, settings);
                     } else if (result.has(commandOptions.killMember)) {
                         CommandShutdownMember.apply(result, hosts, settings);
                     } else if (result.has(commandOptions.forceStart)) {
@@ -142,7 +144,7 @@ public class CLI {
                         settings.identityPath = machineSetting.identityPath;
                         settings.port = machineSetting.sshPort;
                         settings.memberPort = str.split(" ")[0];
-                        CLI.firstMember.put(settings.clusterName, machineSetting.hostName);
+                        CLI.firstMember.put(settings.clusterName, str.split(" ")[1]);
                     }
                 }
             } catch (Exception e) {

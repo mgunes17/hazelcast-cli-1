@@ -39,14 +39,24 @@ public class CommandStartMember {
             return;
         }
 
+        String nodeName = (String) result.valueOf(com.hazelcast.cli.CommandOptions.optionNodeName);
+        if (nodeName != null && CLI.members.get(nodeName) != null) {
+            System.out.println("This tag already exist, please try again");
+            System.out.println("Usage: start-member [host] -t [tag]");
+            return;
+        }
+        if (nodeName == null) {
+            nodeName = "node" + counter++;
+        }
         try {
             if (CLI.firstMember.get(settings.clusterName) == null) {
+                settings.tag = nodeName;
                 settings.user = machine.userName;
                 settings.hostIp = machine.hostIp;
                 settings.identityPath = machine.identityPath;
                 settings.port = machine.sshPort;
                 settings.memberPort = "5701";
-                CLI.firstMember.put(settings.clusterName, machineName);
+                CLI.firstMember.put(settings.clusterName, nodeName);
             }
             String user = machine.userName;
             String hostIp = machine.hostIp;
@@ -58,15 +68,7 @@ public class CommandStartMember {
             if (configFile == null) {
                 configFile = CLI.class.getClassLoader().getResource("hazelcast.xml").getFile();
             }
-            String nodeName = (String) result.valueOf(com.hazelcast.cli.CommandOptions.optionNodeName);
-            if (nodeName != null && CLI.members.get(nodeName) != null) {
-                System.out.println("This tag already exist, please try again");
-                System.out.println("Usage: start-member [host] -t [tag]");
-                return;
-            }
-            if (nodeName == null) {
-                nodeName = "node" + counter++;
-            }
+
 
 //            Config config = new FileSystemXmlConfig(configFile);
 //

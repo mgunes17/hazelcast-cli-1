@@ -5,6 +5,8 @@ import joptsimple.OptionSet;
 
 import java.util.Set;
 
+import static com.hazelcast.cli.CLI.firstMember;
+
 public class CommandSetMasterMember {
 
     public static void apply(OptionSet result, ConsoleReader reader, Set<HostSettings> machines, ClusterSettings properties) throws Exception {
@@ -24,11 +26,14 @@ public class CommandSetMasterMember {
             return;
         }
         HostSettings hostSettings = HostSettings.getMachine(null, machines, CLI.members.get(memberName).getKey());
+        properties.tag = memberName;
         properties.hostIp = hostSettings.hostIp;
         properties.user = hostSettings.userName;
         properties.port = hostSettings.sshPort;
         properties.identityPath = hostSettings.identityPath;
         properties.memberPort = CLI.members.get(memberName).getValue();
+        firstMember.put(properties.clusterName, properties.clusterName);
+        System.out.println("Master member configured successfully");
     }
 
 

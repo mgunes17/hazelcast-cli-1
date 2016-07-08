@@ -25,12 +25,13 @@ public class CommandOptions {
 
     //Options for cluster operations
     static OptionSpec shutdownCluster = optionParser.acceptsAll(Arrays.asList("cluster-shutdown", "S"));
+    static OptionSpec CliInfo = optionParser.acceptsAll(Arrays.asList("info", "i"));
     static OptionSpec killMember = optionParser.acceptsAll(Arrays.asList("k", "kill-member")).withOptionalArg().ofType(String.class);
     static OptionSpec listMember = optionParser.acceptsAll(Arrays.asList("l", "list-members"));
     static OptionSpec listMemberTags = optionParser.acceptsAll(Arrays.asList("l", "list-member-tags"));
     static OptionSpec getClusterState = optionParser.acceptsAll(Arrays.asList("cluster-state"));
     static OptionSpec changeClusterState = optionParser.acceptsAll(Arrays.asList("cluster-change-state")).withOptionalArg().ofType(String.class);
-    static OptionSpec changeClusterSettings = optionParser.acceptsAll(Arrays.asList("set-master-member")).withOptionalArg().ofType(String.class);
+    static OptionSpec changeClusterSettings = optionParser.acceptsAll(Arrays.asList("set-master-member"));
     static OptionSpec setCredentials = optionParser.acceptsAll(Arrays.asList("set-credentials"));
     static OptionSpec forceStart = optionParser.acceptsAll(Arrays.asList("cluster-force-start"));
     static OptionSpec clusterDisconnect = optionParser.acceptsAll(Arrays.asList("cluster-disconnect"));
