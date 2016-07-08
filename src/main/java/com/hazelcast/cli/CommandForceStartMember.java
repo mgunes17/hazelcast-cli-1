@@ -34,7 +34,7 @@ public class CommandForceStartMember {
     }
 
     public static String buildCommandForceStartMember(String hostIp, String clusterPort, String groupName, String password) {
-        return "curl --data \"" + groupName + "&" + password + "&" + hostIp + "&" + clusterPort + "\" http://" + hostIp + ":" + clusterPort + "/hazelcast/rest/management/cluster/forceStart";
+        return "curl --data \"" + groupName + "&" + password + "\" http://127.0.0.1" + ":" + clusterPort + "/hazelcast/rest/management/cluster/forceStart";
     }
 
 }

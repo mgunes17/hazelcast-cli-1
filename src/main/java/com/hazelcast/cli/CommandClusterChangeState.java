@@ -34,7 +34,7 @@ public class CommandClusterChangeState {
 
     private static String buildCommandChangeClusterState(String hostIp, String clusterPort, String groupName, String password, String stateParam) {
         //default: curl --data "dev&dev-pass&active" http://127.0.0.1:5701/hazelcast/rest/management/cluster/changeState
-        return "curl --data \"" + groupName + "&" + password + "&" + stateParam + "\" http://" + hostIp + ":" + clusterPort + "/hazelcast/rest/management/cluster/changeState";
+        return "curl --data \"" + groupName + "&" + password + "&" + stateParam + "\" http://127.0.0.1" + ":" + clusterPort + "/hazelcast/rest/management/cluster/changeState";
     }
 
 }

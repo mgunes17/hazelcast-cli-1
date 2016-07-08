@@ -7,6 +7,17 @@ import static com.hazelcast.cli.CLI.settings;
 
 public class CommandClusterConnect {
 
+    CommandClusterConnect(String groupName, String password) {
+        settings.clusterName = groupName;
+        settings.password = password;
+        System.out.println("Credentials for connecting to a cluster set.");
+        settings.isConnectedToCluster = true;
+
+    }
+
+    CommandClusterConnect() {
+    }
+
     public static void apply(OptionSet result, ConsoleReader reader) throws Exception {
         if (result.nonOptionArguments().size() < 2) {
             System.out.println("Please specify group name and password");

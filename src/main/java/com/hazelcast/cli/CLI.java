@@ -90,7 +90,7 @@ public class CLI {
                     } else if (result.has(commandOptions.shutdownCluster)) {
                         CommandClusterShutdown.apply(result, settings);
                     } else if (result.has(commandOptions.killMember)) {
-                        CommandClusterKillMember.apply(result, hosts, settings);
+                        CommandShutdownMember.apply(result, hosts, settings);
                     } else if (result.has(commandOptions.forceStart)) {
                         CommandForceStartMember.apply(result, hosts, settings);
                     } else if (result.has(commandOptions.listMember)) {
@@ -109,7 +109,7 @@ public class CLI {
                         CommandExitProgram.apply();
                         open = false;
                     } else if (!input.equals("")) {
-                        System.out.println("Command not valid. Please type --help to see valid command options");
+                        System.out.println("Command not valid. Please type help to see valid command options");
                     }
                 }
             } catch (Exception e) {

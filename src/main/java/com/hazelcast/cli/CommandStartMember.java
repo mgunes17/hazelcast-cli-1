@@ -137,7 +137,6 @@ public class CommandStartMember {
         if (configFile == null) {
             configFile = path + "hazelcast/bin/hazelcast.xml";
         }
-        //scp bin/hazelcast.xml mefeakengin@localhost:~/hazelcast-istanbul.xml
         return "scp -i " + identityPath + " " + configFile + " " + user + "@" + hostName + ":" + path + "/hazelcast/bin/hazelcast-" + nodeName + ".xml";
     }
 

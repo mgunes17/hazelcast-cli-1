@@ -8,8 +8,10 @@ import static com.hazelcast.cli.CLI.settings;
 public class ControlUtil {
     public static boolean checkCredentials() {
         if (!settings.isConnectedToCluster) {
-            System.out.println("Please first set credentials by typing set-credentials [group-name] [password]");
-            return false;
+            System.out.println("Credentials are not set. Using default ones dev/dev-pass");
+            new CommandClusterConnect("dev","dev-pass");
+            System.out.println("You can change credentials by typing set-credentials [group-name] [password]");
+
         }
         return true;
     }

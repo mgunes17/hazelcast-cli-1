@@ -1,11 +1,18 @@
 package com.hazelcast.cli;
 
+import com.pastdev.jsch.scp.ScpFile;
 import joptsimple.OptionSet;
+import org.apache.commons.io.FileUtils;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Set;
 
+import static com.hazelcast.cli.CLI.files;
+import static com.hazelcast.cli.CLI.sessions;
 
-public class CommandClusterKillMember {
+
+public class CommandShutdownMember {
 
     public static void apply(OptionSet result, Set<HostSettings> machines, ClusterSettings properties) throws Exception {
 
@@ -33,14 +40,23 @@ public class CommandClusterKillMember {
 
 
         String killNodeCmd = buildCommandKillMember(hostIp, memberKillPort, groupName, password);
-
         SshExecutor.exec(user, hostIp, port, killNodeCmd, false, identityPath, false);
+        File file = files.get(hostName);
+        ArrayList<String> list = new ArrayList<String>();
+        for (String str : FileUtils.readLines(file)) {
+            if (!str.equals(memberKillPort + " " + nodeName)) list.add(str);
+        }
+        FileUtils.writeLines(file, list, false);
+        ScpFile scpFile = new ScpFile(sessions.get(hostName),
+                "/home", "ubuntu", "hazelcast", "members.txt");
+        scpFile.copyFrom(file);
+        files.put(hostName, file);
 
     }
 
     public static String buildCommandKillMember(String hostIp, String clusterPort, String groupName, String password) {
         //default: curl --data "dev&dev-pass" http://127.0.0.1:5701/hazelcast/rest/management/cluster/killNode
-        return "curl --data \"" + groupName + "&" + password + "&" + hostIp + "&" + clusterPort + "\" http://" + hostIp + ":" + clusterPort + "/hazelcast/rest/management/cluster/killNode";
+        return "curl --data \"" + groupName + "&" + password + "\" http://127.0.0.1" + ":" + clusterPort + "/hazelcast/rest/management/cluster/memberShutdown";
     }
 
 }
