@@ -1,6 +1,14 @@
 package com.hazelcast.cli;
 
+import com.pastdev.jsch.scp.ScpFile;
 import joptsimple.OptionSet;
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+
+import static com.hazelcast.cli.CLI.files;
+import static com.hazelcast.cli.CLI.hosts;
+import static com.hazelcast.cli.CLI.sessions;
 
 public class CommandClusterShutdown {
 
@@ -24,6 +32,14 @@ public class CommandClusterShutdown {
         SshExecutor.exec(user, hostIp, port, shutdownCmd, false, identityPath, true);
         CLI.firstMember.remove(properties.clusterName);
 
+        for (HostSettings host : hosts) {
+            File file = files.get(host.hostName);
+            FileUtils.writeStringToFile(file, "", false);
+            files.put(host.hostName, file);
+            ScpFile scpFile = new ScpFile(sessions.get(host.hostName),
+                    "/home", "ubuntu", "hazelcast", "members.txt");
+            scpFile.copyFrom(file);
+        }
     }
 
     public static String buildCommandShutdownCluster(String hostIp, String clusterPort, String groupName, String password) {

@@ -84,7 +84,7 @@ public class CLI {
                     } else if (result.has(commandOptions.listMachines)) {
                         CommandListMachines.apply(hosts);
                     } else if (result.has(commandOptions.setCredentials)) {
-                        CommandClusterConnect.apply(result, reader);
+                        CommandSetCredentials.apply(result, reader);
                     } else if (result.has(commandOptions.clusterDisconnect)) {
                         CommandClusterDisconnect.apply();
                     } else if (result.has(commandOptions.shutdownCluster)) {
@@ -102,7 +102,7 @@ public class CLI {
                     } else if (result.has(commandOptions.changeClusterState)) {
                         CommandClusterChangeState.apply(result, settings);
                     } else if (result.has(commandOptions.changeClusterSettings)) {
-                        CommandClusterChangeSettings.apply(result, reader, hosts, settings);
+                        CommandSetMasterMember.apply(result, reader, hosts, settings);
                     } else if (result.has(commandOptions.startManagementCenter)) {
                         CommandManagementCenterStart.apply(result, settings);
                     } else if (result.has(commandOptions.exit)) {

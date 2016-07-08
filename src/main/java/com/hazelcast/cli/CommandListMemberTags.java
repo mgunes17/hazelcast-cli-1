@@ -8,10 +8,11 @@ public class CommandListMemberTags {
 
     public static void apply() throws Exception {
 
-        System.out.println("tag\thost\tport");
+        String formatStr = "%-20s %-15s %-15s%n";
+        System.out.printf(formatStr, "tag", "host", "port");
         for (String tag : members.keySet()) {
             AbstractMap.SimpleEntry value = members.get(tag);
-            System.out.println(tag + "\t" + value.getKey() + "\t" + value.getValue());
+            System.out.printf(formatStr, tag, value.getKey(), value.getValue());
         }
     }
 

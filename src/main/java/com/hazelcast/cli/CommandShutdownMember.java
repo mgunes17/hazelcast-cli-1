@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Set;
 
 import static com.hazelcast.cli.CLI.files;
+import static com.hazelcast.cli.CLI.members;
 import static com.hazelcast.cli.CLI.sessions;
 
 
@@ -28,7 +29,7 @@ public class CommandShutdownMember {
         }
 
         String nodeName = (String) result.valueOf(CommandOptions.killMember);
-        String hostName = CLI.members.get(nodeName).getKey();
+            String hostName = CLI.members.get(nodeName).getKey();
         String memberKillPort = CLI.members.get(nodeName).getValue();
         HostSettings hostSettings = HostSettings.getMachine(null, machines, hostName);
         String user = hostSettings.userName;
@@ -40,7 +41,7 @@ public class CommandShutdownMember {
 
 
         String killNodeCmd = buildCommandKillMember(hostIp, memberKillPort, groupName, password);
-        SshExecutor.exec(user, hostIp, port, killNodeCmd, false, identityPath, false);
+        System.out.println(SshExecutor.exec(user, hostIp, port, killNodeCmd, false, identityPath, false));
         File file = files.get(hostName);
         ArrayList<String> list = new ArrayList<String>();
         for (String str : FileUtils.readLines(file)) {
@@ -50,6 +51,7 @@ public class CommandShutdownMember {
         ScpFile scpFile = new ScpFile(sessions.get(hostName),
                 "/home", "ubuntu", "hazelcast", "members.txt");
         scpFile.copyFrom(file);
+        members.remove(nodeName);
         files.put(hostName, file);
 
     }

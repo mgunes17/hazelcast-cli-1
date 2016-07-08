@@ -14,7 +14,7 @@ public class CommandOptions {
     static OptionSpec removeMachine = optionParser.acceptsAll(Arrays.asList("remove-machine")).withOptionalArg().ofType(String.class);
     static OptionSpec listMachines = optionParser.acceptsAll(Arrays.asList("list-hosts"));
 
-    static OptionSpec install = optionParser.acceptsAll(Arrays.asList("install", "i")).withOptionalArg().ofType(String.class);
+    static OptionSpec install = optionParser.acceptsAll(Arrays.asList("install", "i"));
     static OptionSpec startMember = optionParser.acceptsAll(Arrays.asList("S", "start-member")).withOptionalArg().ofType(String.class);
     static OptionSpec startManagementCenter = optionParser.acceptsAll(Arrays.asList("start-mc", "management-center"));
     static OptionSpec version = optionParser.acceptsAll(Arrays.asList("v", "version")).withRequiredArg().ofType(String.class);
@@ -30,7 +30,7 @@ public class CommandOptions {
     static OptionSpec listMemberTags = optionParser.acceptsAll(Arrays.asList("l", "list-member-tags"));
     static OptionSpec getClusterState = optionParser.acceptsAll(Arrays.asList("cluster-state"));
     static OptionSpec changeClusterState = optionParser.acceptsAll(Arrays.asList("cluster-change-state")).withOptionalArg().ofType(String.class);
-    static OptionSpec changeClusterSettings = optionParser.acceptsAll(Arrays.asList("cluster-change-settings")).withOptionalArg().ofType(String.class);
+    static OptionSpec changeClusterSettings = optionParser.acceptsAll(Arrays.asList("set-master-member")).withOptionalArg().ofType(String.class);
     static OptionSpec setCredentials = optionParser.acceptsAll(Arrays.asList("set-credentials"));
     static OptionSpec forceStart = optionParser.acceptsAll(Arrays.asList("cluster-force-start"));
     static OptionSpec clusterDisconnect = optionParser.acceptsAll(Arrays.asList("cluster-disconnect"));
