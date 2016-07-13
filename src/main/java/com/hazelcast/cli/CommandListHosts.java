@@ -2,7 +2,7 @@ package com.hazelcast.cli;
 
 import java.util.Set;
 
-public class CommandListMachines {
+public class CommandListHosts {
 
     public static void apply (Set<HostSettings> machines) throws Exception {
 

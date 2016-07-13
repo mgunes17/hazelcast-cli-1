@@ -4,7 +4,7 @@ import joptsimple.OptionSet;
 
 import java.util.Set;
 
-public class CommandRemoveMachine {
+public class CommandRemoveHost {
 
     public static void apply (OptionSet result, Set<HostSettings> machines) throws Exception {
 

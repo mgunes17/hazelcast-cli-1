@@ -3,12 +3,9 @@
                                http://www.hazelcast.com/schema/config/hazelcast-config-3.6.xsd"
            xmlns="http://www.hazelcast.com/schema/config">
     <network>
+        <public-address></public-address>
         <join>
             <tcp-ip enabled="true">
-                <member-list>
-                    <member>172.30.0.14</member>
-                    <member>172.30.0.13</member>
-                </member-list>
             </tcp-ip>
             <multicast enabled="false"/>
             <aws enabled="false">

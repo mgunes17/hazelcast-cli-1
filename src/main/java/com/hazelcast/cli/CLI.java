@@ -79,10 +79,10 @@ public class CLI {
                         CommandStartMember.apply(result, settings, hosts);
 //                    } else if (result.has(commandOptions.host)) {
 //                        CommandAddMachine.apply(reader, hosts, (String) result.valueOf("add-host"));
-                    } else if (result.has(commandOptions.removeMachine)) {
-                        CommandRemoveMachine.apply(result, hosts);
-                    } else if (result.has(commandOptions.listMachines)) {
-                        CommandListMachines.apply(hosts);
+                    } else if (result.has(commandOptions.removeHost)) {
+                        CommandRemoveHost.apply(result, hosts);
+                    } else if (result.has(commandOptions.listHosts)) {
+                        CommandListHosts.apply(hosts);
                     } else if (result.has(commandOptions.setCredentials)) {
                         CommandSetCredentials.apply(result, reader);
                     } else if (result.has(commandOptions.clusterDisconnect)) {
@@ -121,41 +121,41 @@ public class CLI {
 
     private static void readMemberInfoFile() throws Exception {
 
-        for (HostSettings machineSetting : hosts) {
+        for (HostSettings host : hosts) {
             DefaultSessionFactory defaultSessionFactory = new DefaultSessionFactory(
-                    machineSetting.userName, machineSetting.hostIp, machineSetting.sshPort);
+                    host.userName, host.hostIp, host.sshPort);
             try {
-                defaultSessionFactory.setIdentityFromPrivateKey(machineSetting.identityPath);
+                defaultSessionFactory.setIdentityFromPrivateKey(host.identityPath);
             } catch (JSchException e) {
                 System.out.println("error");
             }
-            sessions.put(machineSetting.hostName, defaultSessionFactory);
+            sessions.put(host.hostName, defaultSessionFactory);
             try {
                 ScpFile to = new ScpFile(defaultSessionFactory,
                         "/home/ubuntu/hazelcast/members.txt");
                 File file = File.createTempFile("members", ".tmp");
                 to.copyTo(file);
-                files.put(machineSetting.hostName, file);
+                files.put(host.hostName, file);
                 for (String str : FileUtils.readLines(file)) {
-                    CLI.members.put(str.split(" ")[1], new AbstractMap.SimpleEntry(machineSetting.hostName, str.split(" ")[0]));
+                    CLI.members.put(str.split(" ")[1], new AbstractMap.SimpleEntry(host.hostName, str.split(" ")[0]));
                     if (CLI.firstMember.get(settings.clusterName) == null) {
-                        settings.user = machineSetting.userName;
-                        settings.hostIp = machineSetting.hostIp;
-                        settings.identityPath = machineSetting.identityPath;
-                        settings.port = machineSetting.sshPort;
+                        settings.user = host.userName;
+                        settings.hostIp = host.hostIp;
+                        settings.identityPath = host.identityPath;
+                        settings.port = host.sshPort;
                         settings.memberPort = str.split(" ")[0];
                         CLI.firstMember.put(settings.clusterName, str.split(" ")[1]);
                     }
                 }
             } catch (Exception e) {
-                if (files.get(machineSetting.hostName) == null) {
-                    files.put(machineSetting.hostName, File.createTempFile("members", ".tmp"));
+                if (files.get(host.hostName) == null) {
+                    files.put(host.hostName, File.createTempFile("members", ".tmp"));
                 }
             }
         }
     }
 
-    private static void addHosts(Set<HostSettings> machines) throws Exception {
+    private static void addHosts(Set<HostSettings> hosts) throws Exception {
         HashMap<String, String> hashMap = new HashMap();
         Set<String> set = new HashSet();
         Properties prop = new Properties();
@@ -175,16 +175,16 @@ public class CLI {
             String hostIp = hashMap.get(key + ".ip");
             String remotePath = hashMap.get(key + ".remotePath");
             String identityPath = hashMap.get(key + ".identityPath");
-            HostSettings machine = new HostSettings(key, userName, hostIp, remotePath, identityPath);
+            HostSettings host = new HostSettings(key, userName, hostIp, remotePath, identityPath);
 
-            System.out.println("Connection settings set for " + machine.userName + "@" + machine.hostIp);
-            String message = SshExecutor.exec(machine.userName, machine.hostIp, 22, "", false, machine.identityPath, false);
+            System.out.println("Connection settings set for " + host.userName + "@" + host.hostIp);
+            String message = SshExecutor.exec(host.userName, host.hostIp, 22, "", false, host.identityPath, false);
             if ((message == null) || (!message.equals("exception"))) {
-                System.out.println("Machine " + machine.hostName + " is added.");
-                machines.add(machine);
+                System.out.println("Host " + host.hostName + " is added.");
+                hosts.add(host);
             } else {
-                System.out.println("Could not connect to the machine.");
-                System.out.println("Please try to add a machine again.");
+                System.out.println("Could not connect to the hosts.");
+                System.out.println("Please try to add a hosts again.");
             }
         }
 
