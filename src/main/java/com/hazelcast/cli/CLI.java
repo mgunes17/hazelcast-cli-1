@@ -16,13 +16,6 @@
 
 package com.hazelcast.cli;
 
-import com.jcraft.jsch.JSchException;
-import com.pastdev.jsch.DefaultSessionFactory;
-import com.pastdev.jsch.scp.ScpFile;
-import jline.console.ConsoleReader;
-import joptsimple.OptionSet;
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.io.InputStream;
 import java.util.AbstractMap;
@@ -33,6 +26,20 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.hazelcast.config.Config;
+import com.hazelcast.core.Hazelcast;
+import com.hazelcast.core.HazelcastInstance;
+import com.jcraft.jsch.JSchException;
+import com.pastdev.jsch.DefaultSessionFactory;
+import com.pastdev.jsch.scp.ScpFile;
+
+import jline.console.ConsoleReader;
+import joptsimple.OptionSet;
+
 public class CLI {
 
     private static ConsoleReader reader;
@@ -42,6 +49,10 @@ public class CLI {
     public static HashMap<String, File> files = new HashMap<String, File>();
     public static HashMap<String, DefaultSessionFactory> sessions = new HashMap<String, DefaultSessionFactory>();
     public static ClusterSettings settings;
+    public static String nameSpace;
+	public static String[] command;
+	private static Logger logger = LoggerFactory.getLogger(CLI.class);
+	private HazelcastInstance instance;
 
     public static void main(String[] args) throws Exception {
 
@@ -54,7 +65,14 @@ public class CLI {
     }
 
     private static void mainConsole() throws Exception {
-
+    	CLI cli = new CLI();
+    	Config config = new Config();
+		PropertiesFile po = new PropertiesFile("cli.properties");
+		ClassLoader classLoader = po.loadClasses();
+		
+		config.setClassLoader(classLoader);
+		cli.instance = Hazelcast.newHazelcastInstance(config);
+		
         Boolean open = true;
         CommandOptions commandOptions = new CommandOptions();
         settings = new ClusterSettings();
@@ -110,9 +128,13 @@ public class CLI {
                     } else if (result.has(commandOptions.exit)) {
                         CommandExitProgram.apply();
                         open = false;
-                    } else if (!input.equals("")) {
+                    } else {
+                    	input = input.substring(1);
+                    	Command command = new Command(cli.instance);
+                    	command.process(input);
+                    }  /*else if (!input.equals("")) {
                         System.out.println("Command not valid. Please type help to see valid command options");
-                    }
+                    }*/
                 }
             } catch (Exception e) {
             }
