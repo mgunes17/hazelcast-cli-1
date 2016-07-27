@@ -16,13 +16,6 @@
 
 package com.hazelcast.cli;
 
-import com.jcraft.jsch.JSchException;
-import com.pastdev.jsch.DefaultSessionFactory;
-import com.pastdev.jsch.scp.ScpFile;
-import jline.console.ConsoleReader;
-import joptsimple.OptionSet;
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.io.InputStream;
 import java.util.AbstractMap;
@@ -33,6 +26,31 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import org.apache.commons.io.FileUtils;
+
+import com.hazelcast.core.Hazelcast;
+import com.hazelcast.core.HazelcastInstance;
+import com.jcraft.jsch.JSchException;
+import com.pastdev.jsch.DefaultSessionFactory;
+import com.pastdev.jsch.scp.ScpFile;
+
+import command.collection.map.CommandMapClear;
+import command.collection.map.CommandMapDestroy;
+import command.collection.map.CommandMapGet;
+import command.collection.map.CommandMapGetAll;
+import command.collection.map.CommandMapKeys;
+import command.collection.map.CommandMapLock;
+import command.collection.map.CommandMapPut;
+import command.collection.map.CommandMapRemove;
+import command.collection.map.CommandMapSize;
+import command.collection.map.CommandMapTryLock;
+import command.collection.map.CommandMapUnlock;
+import command.namespace.CommandNSGet;
+import command.namespace.CommandNSReset;
+import command.namespace.CommandNSSet;
+import jline.console.ConsoleReader;
+import joptsimple.OptionSet;
+
 public class CLI {
 
     private static ConsoleReader reader;
@@ -42,9 +60,12 @@ public class CLI {
     public static HashMap<String, File> files = new HashMap<String, File>();
     public static HashMap<String, DefaultSessionFactory> sessions = new HashMap<String, DefaultSessionFactory>();
     public static ClusterSettings settings;
+    public static String nameSpace;
+    public static HazelcastInstance instance = Hazelcast.newHazelcastInstance();
+    
 
+    
     public static void main(String[] args) throws Exception {
-
         reader = new ConsoleReader();
         System.out.println((new HazelcastArt()).art);
         System.out.println(
@@ -107,6 +128,36 @@ public class CLI {
                         CommandSetMasterMember.apply(result, reader, hosts, settings);
                     } else if (result.has(commandOptions.startManagementCenter)) {
                         CommandManagementCenterStart.apply(result, settings);
+                    } else if(result.has(commandOptions.nsGet)) {
+                    	CommandNSGet.apply();
+                    } else if(result.has(CommandOptions.nsReset)) {
+                    	CommandNSReset.apply();
+                	} else if(result.has(commandOptions.nsSet)){
+                		CommandNSSet.apply(result);
+                    } else if(result.has(commandOptions.mapPut)) {
+                    	CommandMapPut.apply(result);
+                    } else if(result.has(commandOptions.mapSize)) {
+                    	CommandMapSize.apply();
+                    } else if(result.has(commandOptions.mapGet)) {
+                    	CommandMapGet.apply(result);
+                    } else if(result.has(commandOptions.mapGetAll)) {
+                    	CommandMapGetAll.apply();
+                    } else if(result.has(commandOptions.mapRemove)) {
+                    	CommandMapRemove.apply(result);
+                    } else if(result.has(commandOptions.mapUnlock)) {
+                    	CommandMapUnlock.apply(result);
+                    } else if(result.has(commandOptions.mapKeys)) {
+                    	CommandMapKeys.apply();
+                    } else if(result.has(commandOptions.mapValues)) {
+                    	CommandMapKeys.apply();
+                    } else if(result.has(commandOptions.mapDestroy)) {
+                    	CommandMapDestroy.apply();
+                    } else if(result.has(commandOptions.mapClear)) {
+                    	CommandMapClear.apply();
+                    } else if(result.has(commandOptions.mapLock)) {
+                    	CommandMapLock.apply(result);
+                    } else if(result.has(commandOptions.mapTryLock)) {
+                    	CommandMapTryLock.apply(result);
                     } else if (result.has(commandOptions.exit)) {
                         CommandExitProgram.apply();
                         open = false;

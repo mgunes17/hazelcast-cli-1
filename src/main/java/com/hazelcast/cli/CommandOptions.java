@@ -35,7 +35,26 @@ public class CommandOptions {
     static OptionSpec setCredentials = optionParser.acceptsAll(Arrays.asList("set-credentials"));
     static OptionSpec forceStart = optionParser.acceptsAll(Arrays.asList("cluster-force-start"));
     static OptionSpec clusterDisconnect = optionParser.acceptsAll(Arrays.asList("cluster-disconnect"));
-
+    
+    //Options for namepace operations
+    static OptionSpec nsGet = optionParser.acceptsAll(Arrays.asList("ns-get"));
+    static OptionSpec nsSet = optionParser.acceptsAll(Arrays.asList("ns-set"));
+    static OptionSpec nsReset = optionParser.acceptsAll(Arrays.asList("ns-reset"));
+    
+    //Options for map operations
+    static OptionSpec mapPut = optionParser.acceptsAll(Arrays.asList("map-put"));
+    static OptionSpec mapGet = optionParser.acceptsAll(Arrays.asList("map-get"));
+    static OptionSpec mapSize = optionParser.acceptsAll(Arrays.asList("map-size"));
+    static OptionSpec mapGetAll = optionParser.acceptsAll(Arrays.asList("map-getall"));
+    static OptionSpec mapRemove = optionParser.acceptsAll(Arrays.asList("map-remove"));
+    static OptionSpec mapKeys = optionParser.acceptsAll(Arrays.asList("map-keys"));
+    static OptionSpec mapValues = optionParser.acceptsAll(Arrays.asList("map-values"));
+    static OptionSpec mapDestroy = optionParser.acceptsAll(Arrays.asList("map-destroy"));
+    static OptionSpec mapLock = optionParser.acceptsAll(Arrays.asList("map-lock"));
+    static OptionSpec mapTryLock = optionParser.acceptsAll(Arrays.asList("map-trylock"));
+    static OptionSpec mapUnlock = optionParser.acceptsAll(Arrays.asList("map-unlock"));
+    static OptionSpec mapClear = optionParser.acceptsAll(Arrays.asList("map-clear"));
+    
     public OptionSet parse(String input) throws Exception {
 
         String[] inputArray = input.trim().split("[ \t]+");

@@ -7,6 +7,7 @@ public class CommandExitProgram {
 
         //TODO: Improve the exit!
         System.out.println("Exiting the program ... ");
+        CLI.instance.shutdown();
         System.exit(-1);
 
     }
