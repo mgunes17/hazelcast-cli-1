@@ -55,6 +55,17 @@ public class CommandOptions {
     static OptionSpec mapUnlock = optionParser.acceptsAll(Arrays.asList("map-unlock"));
     static OptionSpec mapClear = optionParser.acceptsAll(Arrays.asList("map-clear"));
     
+    //OPtions for list operations
+    static OptionSpec listAdd = optionParser.acceptsAll(Arrays.asList("list-add"));
+    static OptionSpec listSet = optionParser.acceptsAll(Arrays.asList("list-set"));
+    static OptionSpec listGet = optionParser.acceptsAll(Arrays.asList("list-get"));
+    static OptionSpec listGetAll = optionParser.acceptsAll(Arrays.asList("list-getall"));
+    static OptionSpec listGetMany = optionParser.acceptsAll(Arrays.asList("list-getmany"));
+    static OptionSpec listSize = optionParser.acceptsAll(Arrays.asList("list-size"));
+    static OptionSpec listContains = optionParser.acceptsAll(Arrays.asList("list-contains"));
+    static OptionSpec listRemove = optionParser.acceptsAll(Arrays.asList("list-remove"));
+    static OptionSpec listClear = optionParser.acceptsAll(Arrays.asList("list-clear"));
+    
     public OptionSet parse(String input) throws Exception {
 
         String[] inputArray = input.trim().split("[ \t]+");

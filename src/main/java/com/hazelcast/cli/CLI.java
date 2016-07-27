@@ -34,6 +34,15 @@ import com.jcraft.jsch.JSchException;
 import com.pastdev.jsch.DefaultSessionFactory;
 import com.pastdev.jsch.scp.ScpFile;
 
+import command.collection.list.CommandListAdd;
+import command.collection.list.CommandListClear;
+import command.collection.list.CommandListContains;
+import command.collection.list.CommandListGet;
+import command.collection.list.CommandListGetAll;
+import command.collection.list.CommandListGetMany;
+import command.collection.list.CommandListRemove;
+import command.collection.list.CommandListSet;
+import command.collection.list.CommandListSize;
 import command.collection.map.CommandMapClear;
 import command.collection.map.CommandMapDestroy;
 import command.collection.map.CommandMapGet;
@@ -158,7 +167,25 @@ public class CLI {
                     	CommandMapLock.apply(result);
                     } else if(result.has(commandOptions.mapTryLock)) {
                     	CommandMapTryLock.apply(result);
-                    } else if (result.has(commandOptions.exit)) {
+                    } else if(result.has(CommandOptions.listAdd)) {
+                    	CommandListAdd.apply(result);
+                	} else if(result.has(CommandOptions.listClear)) {
+                    	CommandListClear.apply();
+                	} else if(result.has(CommandOptions.listContains)) {
+                    	CommandListContains.apply(result);
+                	} else if(result.has(CommandOptions.listGet)) {
+                    	CommandListGet.apply(result);
+                	} else if(result.has(CommandOptions.listGetAll)) {
+                    	CommandListGetAll.apply();
+                	} else if(result.has(CommandOptions.listGetMany)) {
+                    	CommandListGetMany.apply(result);
+                	} else if(result.has(CommandOptions.listRemove)) {
+                    	CommandListRemove.apply(result);
+                	} else if(result.has(CommandOptions.listSet)) {
+                    	CommandListSet.apply(result);
+                	} else if(result.has(CommandOptions.listSize)) {
+                    	CommandListSize.apply();
+                	} else if (result.has(commandOptions.exit)) {
                         CommandExitProgram.apply();
                         open = false;
                     } else if (!input.equals("")) {
