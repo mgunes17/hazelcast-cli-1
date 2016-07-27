@@ -55,7 +55,7 @@ public class CommandOptions {
     static OptionSpec mapUnlock = optionParser.acceptsAll(Arrays.asList("map-unlock"));
     static OptionSpec mapClear = optionParser.acceptsAll(Arrays.asList("map-clear"));
     
-    //OPtions for list operations
+    //Options for list operations
     static OptionSpec listAdd = optionParser.acceptsAll(Arrays.asList("list-add"));
     static OptionSpec listSet = optionParser.acceptsAll(Arrays.asList("list-set"));
     static OptionSpec listGet = optionParser.acceptsAll(Arrays.asList("list-get"));
@@ -65,6 +65,15 @@ public class CommandOptions {
     static OptionSpec listContains = optionParser.acceptsAll(Arrays.asList("list-contains"));
     static OptionSpec listRemove = optionParser.acceptsAll(Arrays.asList("list-remove"));
     static OptionSpec listClear = optionParser.acceptsAll(Arrays.asList("list-clear"));
+    
+    //Options for queue operations
+    static OptionSpec queueClear = optionParser.acceptsAll(Arrays.asList("queue-clear"));
+    static OptionSpec queueOffer = optionParser.acceptsAll(Arrays.asList("queue-offer"));
+    static OptionSpec queueOfferMany = optionParser.acceptsAll(Arrays.asList("queue-offermany"));
+    static OptionSpec queuePeek = optionParser.acceptsAll(Arrays.asList("queue-peek"));
+    static OptionSpec queueSize = optionParser.acceptsAll(Arrays.asList("queue-size"));
+    static OptionSpec queuePoll = optionParser.acceptsAll(Arrays.asList("queue-poll"));
+    static OptionSpec queuePollMany = optionParser.acceptsAll(Arrays.asList("queue-pollmany"));
     
     public OptionSet parse(String input) throws Exception {
 

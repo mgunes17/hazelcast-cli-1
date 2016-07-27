@@ -54,6 +54,13 @@ import command.collection.map.CommandMapRemove;
 import command.collection.map.CommandMapSize;
 import command.collection.map.CommandMapTryLock;
 import command.collection.map.CommandMapUnlock;
+import command.collection.queue.CommandQueueClear;
+import command.collection.queue.CommandQueueOffer;
+import command.collection.queue.CommandQueueOfferMany;
+import command.collection.queue.CommandQueuePeek;
+import command.collection.queue.CommandQueuePoll;
+import command.collection.queue.CommandQueuePollMany;
+import command.collection.queue.CommandQueueSize;
 import command.namespace.CommandNSGet;
 import command.namespace.CommandNSReset;
 import command.namespace.CommandNSSet;
@@ -184,7 +191,21 @@ public class CLI {
                 	} else if(result.has(CommandOptions.listSet)) {
                     	CommandListSet.apply(result);
                 	} else if(result.has(CommandOptions.listSize)) {
-                    	CommandListSize.apply();
+                		CommandListSize.apply();
+                	} else if(result.has(CommandOptions.queueClear)) {
+                    	CommandQueueClear.apply();
+                	} else if(result.has(CommandOptions.queueOffer)) {
+                		CommandQueueOffer.apply(result);
+                	} else if(result.has(CommandOptions.queueOfferMany)) {
+                		CommandQueueOfferMany.apply(result);
+                	} else if(result.has(CommandOptions.queuePeek)) {
+                		CommandQueuePeek.apply();
+                	} else if(result.has(CommandOptions.queuePollMany)) {
+                		CommandQueuePollMany.apply(result);
+                	} else if(result.has(CommandOptions.queueSize)) {
+                		CommandQueueSize.apply();
+                	} else if(result.has(CommandOptions.queuePoll)) {
+                		CommandQueuePoll.apply();
                 	} else if (result.has(commandOptions.exit)) {
                         CommandExitProgram.apply();
                         open = false;
