@@ -75,6 +75,13 @@ public class CommandOptions {
     static OptionSpec queuePoll = optionParser.acceptsAll(Arrays.asList("queue-poll"));
     static OptionSpec queuePollMany = optionParser.acceptsAll(Arrays.asList("queue-pollmany"));
     
+    //Option for set operation
+    static OptionSpec setAdd = optionParser.acceptsAll(Arrays.asList("set-add"));
+    static OptionSpec setClear = optionParser.acceptsAll(Arrays.asList("set-clear"));
+    static OptionSpec setGetAll = optionParser.acceptsAll(Arrays.asList("set-getall"));
+    static OptionSpec setRemove = optionParser.acceptsAll(Arrays.asList("set-remove"));
+    static OptionSpec setSize = optionParser.acceptsAll(Arrays.asList("set-size"));
+    
     public OptionSet parse(String input) throws Exception {
 
         String[] inputArray = input.trim().split("[ \t]+");

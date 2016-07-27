@@ -61,6 +61,11 @@ import command.collection.queue.CommandQueuePeek;
 import command.collection.queue.CommandQueuePoll;
 import command.collection.queue.CommandQueuePollMany;
 import command.collection.queue.CommandQueueSize;
+import command.collection.set.CommandSetAdd;
+import command.collection.set.CommandSetClear;
+import command.collection.set.CommandSetGetAll;
+import command.collection.set.CommandSetRemove;
+import command.collection.set.CommandSetSize;
 import command.namespace.CommandNSGet;
 import command.namespace.CommandNSReset;
 import command.namespace.CommandNSSet;
@@ -206,7 +211,17 @@ public class CLI {
                 		CommandQueueSize.apply();
                 	} else if(result.has(CommandOptions.queuePoll)) {
                 		CommandQueuePoll.apply();
-                	} else if (result.has(commandOptions.exit)) {
+                	} else if(result.has(commandOptions.setAdd)){
+                    	CommandSetAdd.apply(result);
+                    } else if(result.has(commandOptions.setClear)){
+                    	CommandSetClear.apply();
+                    } else if(result.has(commandOptions.setGetAll)){
+                    	CommandSetGetAll.apply();
+                    } else if(result.has(commandOptions.setRemove)){
+                    	CommandSetRemove.apply(result);
+                    }  else if(result.has(commandOptions.setSize)){
+                    	CommandSetSize.apply();
+                    }else if (result.has(commandOptions.exit)) {
                         CommandExitProgram.apply();
                         open = false;
                     } else if (!input.equals("")) {
