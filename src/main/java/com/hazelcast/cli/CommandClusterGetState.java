@@ -5,7 +5,7 @@ import joptsimple.OptionSet;
 public class CommandClusterGetState {
 
 
-    public static void apply(OptionSet result, ClusterSettings properties) {
+    public static void apply(OptionSet result, ClusterSettings properties) throws Exception {
 
         if (!ControlUtil.checkCredentials()) {
             return;
@@ -20,12 +20,7 @@ public class CommandClusterGetState {
         String clusterPort = properties.memberPort;
         String clusterStateCmd = buildCommandGetClusterState(hostIp, clusterPort, groupName, password);
 
-        try {
-			SshExecutor.exec(user, hostIp, port, clusterStateCmd, false, identityPath, true);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        SshExecutor.exec(user, hostIp, port, clusterStateCmd, false, identityPath, true);
 
     }
 

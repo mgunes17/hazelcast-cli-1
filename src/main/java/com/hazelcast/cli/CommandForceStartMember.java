@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class CommandForceStartMember {
 
-    public static void apply(OptionSet result, Set<HostSettings> machines, ClusterSettings properties) {
+    public static void apply(OptionSet result, Set<HostSettings> machines, ClusterSettings properties) throws Exception {
 
         if (!ControlUtil.checkCredentials()) {
             return;
@@ -29,12 +29,7 @@ public class CommandForceStartMember {
 
         String forceStartCmd = buildCommandForceStartMember(hostIp, memberForceStartPort, groupName, password);
 
-        try {
-			SshExecutor.exec(user, hostIp, port, forceStartCmd, false, identityPath, true);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        SshExecutor.exec(user, hostIp, port, forceStartCmd, false, identityPath, true);
 
     }
 

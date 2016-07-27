@@ -6,7 +6,7 @@ import java.util.Set;
 
 public class CommandRemoveHost {
 
-    public static void apply (OptionSet result, Set<HostSettings> machines) {
+    public static void apply (OptionSet result, Set<HostSettings> machines) throws Exception {
 
         boolean machineRemoved = false;
         try {

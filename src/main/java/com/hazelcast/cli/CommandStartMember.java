@@ -15,7 +15,7 @@ public class CommandStartMember {
 
     static int counter = 1;
 
-    public static void apply(OptionSet result, ClusterSettings settings, Set<HostSettings> machines) {
+    public static void apply(OptionSet result, ClusterSettings settings, Set<HostSettings> machines) throws Exception {
 
         if (!ControlUtil.checkCredentials()) {
             return;
