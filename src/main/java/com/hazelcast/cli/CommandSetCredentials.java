@@ -17,7 +17,7 @@ public class CommandSetCredentials {
     CommandSetCredentials() {
     }
 
-    public static void apply(OptionSet result, ConsoleReader reader) throws Exception {
+    public static void apply(OptionSet result, ConsoleReader reader) {
         if (result.nonOptionArguments().size() < 2) {
             System.out.println("Please specify group name and password");
             System.out.println("Usage: set-credentials [group-name] [password]");

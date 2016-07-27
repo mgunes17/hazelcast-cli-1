@@ -9,7 +9,7 @@ import static com.hazelcast.cli.CLI.firstMember;
 
 public class CommandSetMasterMember {
 
-    public static void apply(OptionSet result, ConsoleReader reader, Set<HostSettings> machines, ClusterSettings properties) throws Exception {
+    public static void apply(OptionSet result, ConsoleReader reader, Set<HostSettings> machines, ClusterSettings properties) {
 
         if (!ControlUtil.checkCredentials()) {
             return;

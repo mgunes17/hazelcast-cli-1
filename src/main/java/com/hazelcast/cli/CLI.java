@@ -42,7 +42,7 @@ import joptsimple.OptionSet;
 
 public class CLI {
 
-    private static ConsoleReader reader;
+    public static ConsoleReader reader;
     public static Map<String, String> firstMember = new HashMap<String, String>();
     public static Map<String, AbstractMap.SimpleEntry<String, String>> members = new HashMap<String, AbstractMap.SimpleEntry<String, String>>();
     public static Set<HostSettings> hosts = new HashSet<HostSettings>();
@@ -52,6 +52,7 @@ public class CLI {
     public static String nameSpace;
 	public static String[] command;
 	private static Logger logger = LoggerFactory.getLogger(CLI.class);
+	public static  OptionSet result;
 	private HazelcastInstance instance;
 
     public static void main(String[] args) throws Exception {
@@ -82,61 +83,19 @@ public class CLI {
 
             try {
                 String input = reader.readLine("hz " + settings.clusterName + "-> ");
-                if (!input.startsWith("-")) {
-                    input = "-" + input;
-                }
-                OptionSet result = commandOptions.parse(input);
+                
+                result = commandOptions.parse(input);
 
-                if (result.has(commandOptions.help)) {
-                    CommandHelp.apply();
-                } else {
-                    if (result.has(commandOptions.install)) {
-                        //TODO: Handle properties set for local/remote
-                        CommandInstall.apply(result, hosts);
-                    } else if (result.has(commandOptions.startMember)) {
-                        CommandStartMember.apply(result, settings, hosts);
-//                    } else if (result.has(commandOptions.host)) {
-//                        CommandAddMachine.apply(reader, hosts, (String) result.valueOf("add-host"));
-                    } else if (result.has(commandOptions.removeHost)) {
-                        CommandRemoveHost.apply(result, hosts);
-                    } else if (result.has(commandOptions.listHosts)) {
-                        CommandListHosts.apply(hosts);
-                    } else if (result.has(commandOptions.setCredentials)) {
-                        CommandSetCredentials.apply(result, reader);
-                    } else if (result.has(commandOptions.clusterDisconnect)) {
-                        CommandClusterDisconnect.apply();
-                    } else if (result.has(commandOptions.shutdownCluster)) {
-                        CommandClusterShutdown.apply(result, settings);
-                    } else if (result.has(commandOptions.CliInfo)) {
-                        CommandCliInfo.apply(result, settings);
-                    } else if (result.has(commandOptions.killMember)) {
-                        CommandShutdownMember.apply(result, hosts, settings);
-                    } else if (result.has(commandOptions.forceStart)) {
-                        CommandForceStartMember.apply(result, hosts, settings);
-                    } else if (result.has(commandOptions.listMember)) {
-                        CommandClusterListMember.apply(result, settings);
-                    } else if (result.has(commandOptions.listMemberTags)) {
-                        CommandListMemberTags.apply();
-                    } else if (result.has(commandOptions.getClusterState)) {
-                        CommandClusterGetState.apply(result, settings);
-                    } else if (result.has(commandOptions.changeClusterState)) {
-                        CommandClusterChangeState.apply(result, settings);
-                    } else if (result.has(commandOptions.changeClusterSettings)) {
-                        CommandSetMasterMember.apply(result, reader, hosts, settings);
-                    } else if (result.has(commandOptions.startManagementCenter)) {
-                        CommandManagementCenterStart.apply(result, settings);
-                    } else if (result.has(commandOptions.exit)) {
-                        CommandExitProgram.apply();
-                        open = false;
-                    } else {
-                    	input = input.substring(1);
-                    	Command command = new Command(cli.instance);
-                    	command.process(input);
-                    }  /*else if (!input.equals("")) {
-                        System.out.println("Command not valid. Please type help to see valid command options");
-                    }*/
+
+                if (CommandOptions.commandList.containsKey(input)) {
+                	CommandOptions.commandList.get(input).run();
                 }
-            } catch (Exception e) {
+                else {
+                	Command command = new Command(cli.instance);
+                	command.process(input);
+                }
+            }
+           catch (Exception e) {
             }
         }
     }

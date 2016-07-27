@@ -1,10 +1,12 @@
 package com.hazelcast.cli;
 
+import com.jcraft.jsch.JSchException;
 import com.pastdev.jsch.scp.ScpFile;
 import joptsimple.OptionSet;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.io.IOException;
 
 import static com.hazelcast.cli.CLI.files;
 import static com.hazelcast.cli.CLI.hosts;
@@ -12,7 +14,7 @@ import static com.hazelcast.cli.CLI.sessions;
 
 public class CommandClusterShutdown {
 
-    public static void apply(OptionSet result, ClusterSettings properties) throws Exception {
+    public static void apply(OptionSet result, ClusterSettings properties) {
 
         if (!ControlUtil.checkCredentials()) {
             return;
@@ -29,16 +31,34 @@ public class CommandClusterShutdown {
 
         String shutdownCmd = buildCommandShutdownCluster(hostIp, clusterPort, groupName, password);
 
-        SshExecutor.exec(user, hostIp, port, shutdownCmd, false, identityPath, true);
+        try {
+			SshExecutor.exec(user, hostIp, port, shutdownCmd, false, identityPath, true);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         CLI.firstMember.remove(properties.clusterName);
 
         for (HostSettings host : hosts) {
             File file = files.get(host.hostName);
-            FileUtils.writeStringToFile(file, "", false);
+            try {
+				FileUtils.writeStringToFile(file, "", false);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
             files.put(host.hostName, file);
             ScpFile scpFile = new ScpFile(sessions.get(host.hostName),
                     "/home", "ubuntu", "hazelcast", "members.txt");
-            scpFile.copyFrom(file);
+            try {
+				scpFile.copyFrom(file);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JSchException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         }
     }
 

@@ -4,7 +4,7 @@ import java.util.Set;
 
 public class CommandListHosts {
 
-    public static void apply (Set<HostSettings> machines) throws Exception {
+    public static void apply (Set<HostSettings> machines) {
 
             for (HostSettings machine: machines)
                 System.out.println(

@@ -5,7 +5,7 @@ import joptsimple.OptionSet;
 
 public class CommandManagementCenterStart {
 
-    public static void apply(OptionSet result, ClusterSettings properties) throws Exception {
+    public static void apply(OptionSet result, ClusterSettings properties){
 
         if(!properties.isConnectedToCluster) {
             System.out.println("Please first connect to a cluster by typing --cluster-connect.");
@@ -19,7 +19,12 @@ public class CommandManagementCenterStart {
         String identityPath = properties.identityPath;
 
         //TODO: Allow .xml configuration!
-        SshExecutor.exec(user, hostIp, port, buildCommandStartMC(remotePath, hostIp), false, identityPath, false);
+        try {
+			SshExecutor.exec(user, hostIp, port, buildCommandStartMC(remotePath, hostIp), false, identityPath, false);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
     }
 

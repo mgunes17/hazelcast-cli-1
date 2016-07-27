@@ -6,7 +6,7 @@ import static com.hazelcast.cli.CLI.members;
 
 public class CommandListMemberTags {
 
-    public static void apply() throws Exception {
+    public static void apply() {
 
         String formatStr = "%-20s %-15s %-15s%n";
         System.out.printf(formatStr, "tag", "host", "port");

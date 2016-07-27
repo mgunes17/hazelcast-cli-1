@@ -5,7 +5,7 @@ import joptsimple.OptionSet;
 
 public class CommandClusterListMember {
 
-    public static void apply(OptionSet result, ClusterSettings properties) throws Exception {
+    public static void apply(OptionSet result, ClusterSettings properties) {
 
         if (!ControlUtil.checkCredentials()) {
             return;
@@ -20,7 +20,12 @@ public class CommandClusterListMember {
 
         String listNodesCmd = buildCommandListNodes(hostIp, clusterPort, groupName, password);
 
-        System.out.println(SshExecutor.exec(user, hostIp, port, listNodesCmd, false, identityPath, false).replace(",", System.lineSeparator()));
+        try {
+			System.out.println(SshExecutor.exec(user, hostIp, port, listNodesCmd, false, identityPath, false).replace(",", System.lineSeparator()));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
     }
 
