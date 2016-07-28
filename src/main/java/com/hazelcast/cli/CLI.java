@@ -28,6 +28,7 @@ import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 
+import com.hazelcast.config.Config;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.jcraft.jsch.JSchException;
@@ -82,7 +83,7 @@ public class CLI {
     public static HashMap<String, DefaultSessionFactory> sessions = new HashMap<String, DefaultSessionFactory>();
     public static ClusterSettings settings;
     public static String nameSpace;
-    public static HazelcastInstance instance = Hazelcast.newHazelcastInstance();
+    public static HazelcastInstance instance;
         
     public static void main(String[] args) throws Exception {
         reader = new ConsoleReader();
@@ -90,6 +91,13 @@ public class CLI {
         System.out.println(
                 "Welcome to Hazelcast command line interface.\n" +
                         "Type help to see command options.");
+        
+        Config config = new Config();
+		PropertiesFile po = new PropertiesFile("cli.properties");
+		ClassLoader classLoader = po.loadClasses();
+		
+		instance = Hazelcast.newHazelcastInstance(config);
+		config.setClassLoader(classLoader);
         mainConsole();
     }
 
