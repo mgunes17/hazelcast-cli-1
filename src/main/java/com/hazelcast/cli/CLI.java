@@ -55,6 +55,11 @@ import command.collection.map.CommandMapRemove;
 import command.collection.map.CommandMapSize;
 import command.collection.map.CommandMapTryLock;
 import command.collection.map.CommandMapUnlock;
+import command.collection.memory.CommandMemoryAll;
+import command.collection.memory.CommandMemoryList;
+import command.collection.memory.CommandMemoryMap;
+import command.collection.memory.CommandMemoryQueue;
+import command.collection.memory.CommandMemorySet;
 import command.collection.queue.CommandQueueClear;
 import command.collection.queue.CommandQueueOffer;
 import command.collection.queue.CommandQueueOfferMany;
@@ -217,24 +222,35 @@ public class CLI {
                 		CommandQueueSize.apply();
                 	} else if(result.has(CommandOptions.queuePoll)) {
                 		CommandQueuePoll.apply();
-                	} else if(result.has(commandOptions.setAdd)){
+                	} else if(result.has(commandOptions.setAdd)) {
                     	CommandSetAdd.apply(result);
-                    } else if(result.has(commandOptions.setClear)){
+                    } else if(result.has(commandOptions.setClear)) {
                     	CommandSetClear.apply();
-                    } else if(result.has(commandOptions.setGetAll)){
+                    } else if(result.has(commandOptions.setGetAll)) {
                     	CommandSetGetAll.apply();
-                    } else if(result.has(commandOptions.setRemove)){
+                    } else if(result.has(commandOptions.setRemove)) {
                     	CommandSetRemove.apply(result);
-                    }  else if(result.has(commandOptions.setSize)){
+                    }  else if(result.has(commandOptions.setSize)) {
                     	CommandSetSize.apply();
-                    }else if (result.has(commandOptions.exit)) {
+                    } else if (result.has(commandOptions.exit)) {
                         CommandExitProgram.apply();
                         open = false;
+                    } else if (result.has(commandOptions.memAll)) {
+                    	CommandMemoryAll.apply(result);
+                    } else if (result.has(commandOptions.memList)) {
+                    	CommandMemoryList.apply(result);
+                    } else if (result.has(commandOptions.memMap)) {
+                    	CommandMemoryMap.apply(result);
+                    } else if (result.has(commandOptions.memSet)) {
+                    	CommandMemorySet.apply(result);
+                    } else if (result.has(commandOptions.memQueue)) {
+                    	CommandMemoryQueue.apply(result);
                     } else if (!input.equals("")) {
                         System.out.println("Command not valid. Please type help to see valid command options");
                     }
                 }
             } catch (Exception e) {
+            	instance.shutdown();
             }
         }
     }
