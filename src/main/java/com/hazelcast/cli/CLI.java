@@ -250,6 +250,7 @@ public class CLI {
                     }
                 }
             } catch (Exception e) {
+            	e.printStackTrace();
             	instance.shutdown();
             }
         }

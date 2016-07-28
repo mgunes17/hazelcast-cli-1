@@ -22,8 +22,14 @@ public class CommandQueuePoll {
 		}
 		
 		Queue<Object> queue = CLI.instance.getQueue(CLI.nameSpace); 
-		FieldsOfObject.displayObjectFields(new ObjectMapper().
-				writeValueAsString(queue.poll()));
+		
+		try {
+			FieldsOfObject.displayObjectFields(new ObjectMapper().
+					writeValueAsString(queue.poll()));
+		} catch (Exception e) {
+			System.out.println("JsonProcessing Exception");
+		}
+		
 
 	}
 }

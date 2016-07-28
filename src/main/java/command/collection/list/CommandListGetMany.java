@@ -27,8 +27,13 @@ public class CommandListGetMany {
 		String[] index = String.valueOf(result.nonOptionArguments().get(0)).split(",");
 		
 		for(int i=0; i<index.length; i++){
-			FieldsOfObject.displayObjectFields(new ObjectMapper().
-					writeValueAsString(list.get(Integer.parseInt(index[i]))));
+			try {
+				FieldsOfObject.displayObjectFields(new ObjectMapper().
+						writeValueAsString(list.get(Integer.parseInt(index[i]))));
+			} catch(Exception e) {
+				System.out.println("Invalid index");
+			}
+			
 
 		}
 	}

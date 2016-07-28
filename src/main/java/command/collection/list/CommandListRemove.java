@@ -28,8 +28,13 @@ public class CommandListRemove {
 		String decision = in.nextLine();
 		
 		if(decision.equalsIgnoreCase("y")){
-			list.remove(result.nonOptionArguments().get(0));
-			System.out.println("Remove is OK");
+			try {
+				list.remove(result.nonOptionArguments().get(0));
+				System.out.println("Remove is OK");
+			} catch(ArrayIndexOutOfBoundsException e) {
+				System.out.println("Index is invalid");
+			}
+			
 		}
 		else{
 			System.out.println("NOT Removed");

@@ -21,6 +21,14 @@ public class CommandListSet {
 		}
 		
 		List<Object> list = CLI.instance.getList(CLI.nameSpace); 
-		list.set((Integer) result.nonOptionArguments().get(0), result.nonOptionArguments().get(1));
+		
+		try {
+			list.set((Integer.valueOf((String)result.nonOptionArguments().get(0))), result.nonOptionArguments().get(1));
+		} catch(IndexOutOfBoundsException e) {
+			System.out.println("Index is invalid");
+		} catch(ClassCastException e) {
+			System.out.println("Please enter a index as integer");
+		}
+		
 	}
 }

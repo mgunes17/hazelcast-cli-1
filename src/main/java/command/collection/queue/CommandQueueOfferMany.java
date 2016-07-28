@@ -25,8 +25,13 @@ public class CommandQueueOfferMany {
 		String[] values = ((String) result.nonOptionArguments().get(1)).split(",");
 		
 		for(int i=0; i<(Integer)result.nonOptionArguments().get(0); i++){
-			queue.offer(values[i]);
-			System.out.println(true);
+			try {
+				queue.offer(values[i]);
+				System.out.println(true);
+			} catch( IndexOutOfBoundsException e) {
+				System.out.println("Please enter a value to offer");
+			}
+			
 		}
 	}
 }

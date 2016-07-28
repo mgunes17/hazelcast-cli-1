@@ -20,8 +20,14 @@ public class CommandQueueOffer {
 			return;
 		}
 		
-		Queue<Object> queue = CLI.instance.getQueue(CLI.nameSpace); 
-		queue.offer(result.nonOptionArguments().get(0));
-		System.out.println(true);
+		Queue<Object> queue = CLI.instance.getQueue(CLI.nameSpace);
+		
+		try {
+			queue.offer(result.nonOptionArguments().get(0));
+			System.out.println(true);
+		} catch( IndexOutOfBoundsException e) {
+			System.out.println("Please enter a value to offer");
+		}
+		
 	}
 }

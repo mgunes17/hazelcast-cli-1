@@ -23,8 +23,14 @@ public class CommandListGet {
 		}
 		
 		List<Object> list = CLI.instance.getList(CLI.nameSpace); 
-		FieldsOfObject.displayObjectFields(new ObjectMapper().
-				writeValueAsString(list.get((Integer) result.nonOptionArguments().get(0))));
+		
+		try {
+			FieldsOfObject.displayObjectFields(new ObjectMapper().
+					writeValueAsString(list.get((Integer) result.nonOptionArguments().get(0))));
+		} catch (IndexOutOfBoundsException e ){
+			System.out.println("Index is invalid");
+		} 
+		
 	}
 
 }

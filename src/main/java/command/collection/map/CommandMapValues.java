@@ -2,6 +2,7 @@ package command.collection.map;
 
 import java.util.Map;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hazelcast.cli.CLI;
 
@@ -24,8 +25,13 @@ public class CommandMapValues {
 		Map map = CLI.instance.getMap(CLI.nameSpace);
 		
 		for(Object key : map.keySet()){
-			FieldsOfObject.displayObjectFields(new ObjectMapper().
-					writeValueAsString(map.get(key)));
+			try {
+				FieldsOfObject.displayObjectFields(new ObjectMapper().
+						writeValueAsString(map.get(key)));
+			} catch(JsonProcessingException e) {
+				System.out.println("JsonProcessing Exception");
+			}
+			
 
 		}
 	}

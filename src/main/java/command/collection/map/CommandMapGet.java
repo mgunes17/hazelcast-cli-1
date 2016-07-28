@@ -1,5 +1,6 @@
 package command.collection.map;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hazelcast.cli.CLI;
 import com.hazelcast.core.IMap;
@@ -22,8 +23,14 @@ public class CommandMapGet {
 		}
 		
 		IMap map = CLI.instance.getMap(CLI.nameSpace); 
-		FieldsOfObject.displayObjectFields(new ObjectMapper().
-				writeValueAsString(map.get(result.nonOptionArguments().get(0))));
+		
+		try{
+			FieldsOfObject.displayObjectFields(new ObjectMapper().
+					writeValueAsString(map.get(result.nonOptionArguments().get(0))));
+		} catch (JsonProcessingException e) {
+			System.out.println("Json processing error");
+		}
+		
 
 	}
 }

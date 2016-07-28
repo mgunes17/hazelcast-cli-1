@@ -3,6 +3,7 @@ package command.collection.set;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hazelcast.cli.CLI;
 
@@ -21,8 +22,12 @@ public class CommandSetGetAll {
 		
 		Iterator<?> iterator = set.iterator();
 		while ( iterator.hasNext() ) {
-			FieldsOfObject.displayObjectFields(new ObjectMapper().
-					writeValueAsString(iterator.next()));
+			try {
+				FieldsOfObject.displayObjectFields(new ObjectMapper().
+						writeValueAsString(iterator.next()));
+			} catch(JsonProcessingException e) {
+				System.out.println("Json Processing Exception");
+			}	
 		}
 	}
 }
