@@ -6,8 +6,11 @@ import joptsimple.OptionSpec;
 
 import java.util.Arrays;
 
-public class CommandOptions {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+public class CommandOptions {
+	private static Logger logger = LoggerFactory.getLogger(CommandOptions.class);
     static OptionParser optionParser = new OptionParser();
     static OptionSpec help = optionParser.acceptsAll(Arrays.asList("help", "h"));
     static OptionSpec exit = optionParser.acceptsAll(Arrays.asList("exit", "e"));
@@ -93,9 +96,11 @@ public class CommandOptions {
 
         String[] inputArray = input.trim().split("[ \t]+");
         try {
+        	logger.info("Input is parsing");
             return this.optionParser.parse(inputArray);
         } catch (Exception e) {
             //TODO: Check if works/
+        	logger.warn("Input parsing error",e);
             return this.parse("");
         }
     }

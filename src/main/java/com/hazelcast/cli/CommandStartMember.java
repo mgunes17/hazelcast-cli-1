@@ -3,6 +3,8 @@ package com.hazelcast.cli;
 import com.pastdev.jsch.scp.ScpFile;
 import joptsimple.OptionSet;
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.AbstractMap;
@@ -12,7 +14,7 @@ import static com.hazelcast.cli.CLI.files;
 import static com.hazelcast.cli.CLI.sessions;
 
 public class CommandStartMember {
-
+	private static Logger logger = LoggerFactory.getLogger(CommandStartMember.class);
     static int counter = 1;
 
     public static void apply(OptionSet result, ClusterSettings settings, Set<HostSettings> machines) throws Exception {
@@ -96,6 +98,7 @@ public class CommandStartMember {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException ex) {
+            	logger.warn("interrupted excepiton", ex);
                 Thread.currentThread().interrupt();
             }
 
@@ -130,6 +133,7 @@ public class CommandStartMember {
                     "/home", "ubuntu", "hazelcast", "members.txt");
             scpFile.copyFrom(file);
         } catch (Exception e) {
+        	logger.warn("Member couldn't connected", e);
             System.out.println("Please try starting a member again.");
         }
 

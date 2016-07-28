@@ -2,14 +2,19 @@ package command.collection.queue;
 
 import java.util.Queue;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.hazelcast.cli.CLI;
 
 import command.collection.common.DecisionToCreate;
 import command.collection.common.FindCollectionName;
+import command.collection.list.CommandListSet;
 import joptsimple.OptionSet;
 
 public class CommandQueueOfferMany {
-
+	private static Logger logger = LoggerFactory.getLogger(CommandListSet.class);
+	
 	public static void apply(OptionSet result) throws Exception {
 		
 		if(CLI.nameSpace == null){
@@ -29,6 +34,7 @@ public class CommandQueueOfferMany {
 				queue.offer(values[i]);
 				System.out.println(true);
 			} catch( IndexOutOfBoundsException e) {
+				logger.warn("Offer value is null", e);
 				System.out.println("Please enter a value to offer");
 			}
 			

@@ -2,6 +2,9 @@ package command.collection.list;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hazelcast.cli.CLI;
 
@@ -11,7 +14,8 @@ import command.collection.common.FindCollectionName;
 import joptsimple.OptionSet;
 
 public class CommandListGetMany {
-
+	private static Logger logger = LoggerFactory.getLogger(CommandListGetMany.class);
+	
 	public static void apply(OptionSet result) throws Exception{
 		
 		if(CLI.nameSpace == null){
@@ -31,6 +35,7 @@ public class CommandListGetMany {
 				FieldsOfObject.displayObjectFields(new ObjectMapper().
 						writeValueAsString(list.get(Integer.parseInt(index[i]))));
 			} catch(Exception e) {
+				logger.warn("Invalid index");
 				System.out.println("Invalid index");
 			}
 			

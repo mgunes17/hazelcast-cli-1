@@ -16,6 +16,14 @@ public class CommandSetRemove {
 		}
 		
 		Set<Object> set = CLI.instance.getSet(CLI.nameSpace); 
-		set.remove(result.nonOptionArguments().get(0));
+		
+		if(set.contains(result.nonOptionArguments().get(0))){
+			set.remove(result.nonOptionArguments().get(0));
+			System.out.println(true);
+		}
+		else{
+			System.out.println(set.remove(result.nonOptionArguments().get(0)) + " is not exist");
+		}
+		
 	}
 }

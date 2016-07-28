@@ -1,7 +1,11 @@
 package com.hazelcast.cli;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ClusterSettings {
 
+	private static Logger logger = LoggerFactory.getLogger(ClusterSettings.class);
     public boolean isConnectedToCluster;
 
     //properties used for management
@@ -18,6 +22,7 @@ public class ClusterSettings {
     public String memberPort;
 
     public ClusterSettings() {
+    	logger.info("ClusterSettings object is initializing");
         this.port = 22;
         this.isConnectedToCluster = false;
     }

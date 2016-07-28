@@ -1,13 +1,18 @@
 package com.hazelcast.cli;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 
 public class CommandClusterChangeState {
-
+	private static Logger logger = LoggerFactory.getLogger(CommandClusterChangeState.class);
+	
     public static void apply(OptionSet result, ClusterSettings properties) throws Exception {
 
         if (!ControlUtil.checkCredentials()) {
+        	logger.info("checkCredentials in false");
             return;
         }
 
@@ -23,11 +28,13 @@ public class CommandClusterChangeState {
         String stateParam = ((String) result.valueOf(changeState)).toLowerCase();
 
         if (!(stateParam.equals("active") || stateParam.equals("passive") || stateParam.equals("frozen"))) {
+        	logger.info("ChangeState parameters are invalid");
             System.out.println("Invalid change state parameter. State parameter should be one of active, passive or frozen \n");
             return;
         }
         String changeClusterStateCmd = buildCommandChangeClusterState(hostIp, clusterPort, groupName, password, stateParam);
 
+        logger.info("SshExecuter is running");
         SshExecutor.exec(user, hostIp, port, changeClusterStateCmd, false, identityPath, true);
 
     }

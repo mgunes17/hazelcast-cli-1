@@ -6,8 +6,12 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.Set;
 
-public class CommandAddHost {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+public class CommandAddHost {
+	private static Logger logger = LoggerFactory.getLogger(CommandAddHost.class);
+	
     public static void apply(ConsoleReader reader, Set<HostSettings> hosts, String hostName) throws Exception {
         if (hostName == null) hostName = "";
         boolean hostNameExisting = false;
@@ -72,9 +76,11 @@ public class CommandAddHost {
         System.out.println("Connection settings set for " + host.userName + "@" + host.hostIp);
         String message = SshExecutor.exec(host.userName, host.hostIp, 22, "", false, host.identityPath, false);
         if ((message == null) || (!message.equals("exception"))) {
+        	logger.info("Host is adding");
             System.out.println("Host " + host.hostName + " is added.");
             hosts.add(host);
         } else {
+        	logger.info("Host couldn't connect");
             System.out.println("Could not connect to the host.");
             System.out.println("Please try to add a host again.");
         }

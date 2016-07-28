@@ -4,17 +4,23 @@ import joptsimple.OptionSet;
 
 import java.util.Set;
 
-public class CommandInstall {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+public class CommandInstall {
+	private static Logger logger = LoggerFactory.getLogger(CommandInstall.class);
+	
     public static void apply(OptionSet result, Set<HostSettings> machines) throws Exception {
 
         if (machines.size() == 0) {
+        	logger.info("There is no host");
             System.out.println(
                     "You don't have any hosts configured.\n" +
                             "Please first add a host machine with the command '--add-machine'.");
             return;
         }
         if (result.nonOptionArguments().size() < 2) {
+        	logger.info("Missing parameters");
             System.out.println("Please specify host name and version");
             System.out.println("Usage: install [host] [version]");
             System.out.println("Type help to see command options.");

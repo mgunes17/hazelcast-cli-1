@@ -3,8 +3,12 @@ package com.hazelcast.cli;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-public class LocalExecutor {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+public class LocalExecutor {
+	private static Logger logger = LoggerFactory.getLogger(LocalExecutor.class);
+	
     public static String exec(String command, boolean breakProcess) throws Exception {
 
         String[] commandSplit = command.split(" ");
@@ -51,6 +55,7 @@ public class LocalExecutor {
 //            }
 
         } catch (Exception e) {
+        	logger.warn("Linux command running is unsuccessfull", e);
             System.out.println("Error occured while executing Linux command. Error Description: "
                     + e.getMessage());
         }

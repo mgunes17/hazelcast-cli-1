@@ -27,6 +27,8 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.hazelcast.config.Config;
 import com.hazelcast.core.Hazelcast;
@@ -89,6 +91,7 @@ public class CLI {
     public static ClusterSettings settings;
     public static String nameSpace;
     public static HazelcastInstance instance;
+    private static Logger logger = LoggerFactory.getLogger(CLI.class);
         
     public static void main(String[] args) throws Exception {
         reader = new ConsoleReader();
@@ -100,9 +103,11 @@ public class CLI {
         Config config = new Config();
 		PropertiesFile po = new PropertiesFile("cli.properties");
 		ClassLoader classLoader = po.loadClasses();
-		
-		instance = Hazelcast.newHazelcastInstance(config);
 		config.setClassLoader(classLoader);
+		
+		logger.info("Hazelcast instance is starting");
+		instance = Hazelcast.newHazelcastInstance(config);
+			
         mainConsole();
     }
 
@@ -116,12 +121,14 @@ public class CLI {
         while (open) {
 
             try {
+            	logger.info("Input is reading");
                 String input = reader.readLine("hz " + settings.clusterName + "-> ");
                 if (!input.startsWith("-")) {
                     input = "-" + input;
                 }
                 OptionSet result = commandOptions.parse(input);
 
+                logger.info("Command is searching");
                 if (result.has(commandOptions.help)) {
                     CommandHelp.apply();
                 } else {
@@ -251,6 +258,7 @@ public class CLI {
                 }
             } catch (Exception e) {
             	e.printStackTrace();
+            	logger.error("Instance is closing", e);;
             	instance.shutdown();
             }
         }
@@ -264,7 +272,8 @@ public class CLI {
             try {
                 defaultSessionFactory.setIdentityFromPrivateKey(host.identityPath);
             } catch (JSchException e) {
-                System.out.println("error");
+            	logger.error("Connection error", e);
+                System.out.println("Connection error");
             }
             sessions.put(host.hostName, defaultSessionFactory);
             try {
@@ -285,6 +294,7 @@ public class CLI {
                     }
                 }
             } catch (Exception e) {
+            	logger.error("Properties file", e);
                 if (files.get(host.hostName) == null) {
                     files.put(host.hostName, File.createTempFile("members", ".tmp"));
                 }
@@ -296,9 +306,12 @@ public class CLI {
         HashMap<String, String> hashMap = new HashMap();
         Set<String> set = new HashSet();
         Properties prop = new Properties();
+        
+        logger.info("Properties file is reading");
         InputStream is = CLI.class.getClassLoader().getResourceAsStream("cli.properties");
         prop.load(is);
         Enumeration it = prop.propertyNames();
+        
         while (it.hasMoreElements()) {
             String token = (String) it.nextElement();
             String key = token.split("\\.")[0];

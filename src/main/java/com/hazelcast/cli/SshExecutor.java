@@ -9,8 +9,12 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Properties;
 
-public class SshExecutor {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+public class SshExecutor {
+	private static Logger logger = LoggerFactory.getLogger(CLI.class);
+	
     public static String exec(String user, String host, int port, String command, boolean breakProcess, String identityPath, boolean shouldPrint) throws Exception {
 
 //        System.out.println("user " + user + " host " + host + " port " + port + " identity path " + identityPath + " command " + command);
@@ -57,8 +61,10 @@ public class SshExecutor {
 
         } catch (JSchException e) {
             if (e.getMessage().equals("Auth fail")) {
+            	logger.warn("Auth fail", e);
                 System.out.println("The authentication to the machine failed.");
             } else if (e.getMessage().contains("invalid privatekey")) {
+            	logger.warn("Invalid private key", e);
                 System.out.println("Invalid private key.");
             }
             if (e.getCause() != null) {
@@ -68,6 +74,7 @@ public class SshExecutor {
             }
             return "exception";
         } catch (Exception e) {
+        	logger.warn("", e);
             System.out.println("Connection cannot be established. Please try again.");
             return "exception";
         } finally {

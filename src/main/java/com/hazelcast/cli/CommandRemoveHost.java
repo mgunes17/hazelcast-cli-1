@@ -4,8 +4,12 @@ import joptsimple.OptionSet;
 
 import java.util.Set;
 
-public class CommandRemoveHost {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+public class CommandRemoveHost {
+	private static Logger logger = LoggerFactory.getLogger(CommandRemoveHost.class);
+	
     public static void apply (OptionSet result, Set<HostSettings> machines) throws Exception {
 
         boolean machineRemoved = false;
@@ -35,6 +39,7 @@ public class CommandRemoveHost {
 
         } catch (Exception e) {
             //TODO: Can there be other exceptions?
+        	logger.warn("Invalid machine name", e);
             System.out.println("Please enter a valid machine name from the list of hosts.");
         }
 
