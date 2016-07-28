@@ -2,9 +2,11 @@ package command.collection.queue;
 
 import java.util.Queue;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hazelcast.cli.CLI;
 
 import command.collection.common.DecisionToCreate;
+import command.collection.common.FieldsOfObject;
 import command.collection.common.FindCollectionName;
 
 public class CommandQueuePoll {
@@ -20,6 +22,8 @@ public class CommandQueuePoll {
 		}
 		
 		Queue<Object> queue = CLI.instance.getQueue(CLI.nameSpace); 
-		System.out.println(queue.poll());
+		FieldsOfObject.displayObjectFields(new ObjectMapper().
+				writeValueAsString(queue.poll()));
+
 	}
 }

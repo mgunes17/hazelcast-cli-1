@@ -3,9 +3,11 @@ package command.collection.list;
 import java.util.Iterator;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hazelcast.cli.CLI;
 
 import command.collection.common.DecisionToCreate;
+import command.collection.common.FieldsOfObject;
 import command.collection.common.FindCollectionName;
 
 public class CommandListGetAll {
@@ -24,7 +26,8 @@ public class CommandListGetAll {
 		Iterator<?> iterator = list.iterator();
 		
 		while(iterator.hasNext()){
-			System.out.println(iterator.next());
+			FieldsOfObject.displayObjectFields(new ObjectMapper().
+					writeValueAsString(iterator.next()));
 		}
 		
 	}

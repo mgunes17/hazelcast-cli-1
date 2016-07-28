@@ -2,9 +2,11 @@ package command.collection.list;
 
 import java.util.List;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hazelcast.cli.CLI;
 
 import command.collection.common.DecisionToCreate;
+import command.collection.common.FieldsOfObject;
 import command.collection.common.FindCollectionName;
 import joptsimple.OptionSet;
 
@@ -25,7 +27,9 @@ public class CommandListGetMany {
 		String[] index = String.valueOf(result.nonOptionArguments().get(0)).split(",");
 		
 		for(int i=0; i<index.length; i++){
-			list.get(Integer.parseInt(index[i]));
+			FieldsOfObject.displayObjectFields(new ObjectMapper().
+					writeValueAsString(list.get(Integer.parseInt(index[i]))));
+
 		}
 	}
 }

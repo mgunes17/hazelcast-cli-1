@@ -3,7 +3,10 @@ package command.collection.set;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hazelcast.cli.CLI;
+
+import command.collection.common.FieldsOfObject;
 
 public class CommandSetGetAll {
 
@@ -18,7 +21,8 @@ public class CommandSetGetAll {
 		
 		Iterator<?> iterator = set.iterator();
 		while ( iterator.hasNext() ) {
-			System.out.println(iterator.next());
+			FieldsOfObject.displayObjectFields(new ObjectMapper().
+					writeValueAsString(iterator.next()));
 		}
 	}
 }

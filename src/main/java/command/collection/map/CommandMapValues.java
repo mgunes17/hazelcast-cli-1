@@ -2,9 +2,11 @@ package command.collection.map;
 
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hazelcast.cli.CLI;
 
 import command.collection.common.DecisionToCreate;
+import command.collection.common.FieldsOfObject;
 import command.collection.common.FindCollectionName;
 
 public class CommandMapValues {
@@ -22,7 +24,9 @@ public class CommandMapValues {
 		Map map = CLI.instance.getMap(CLI.nameSpace);
 		
 		for(Object key : map.keySet()){
-			System.out.println(map.get(key));
+			FieldsOfObject.displayObjectFields(new ObjectMapper().
+					writeValueAsString(map.get(key)));
+
 		}
 	}
 }

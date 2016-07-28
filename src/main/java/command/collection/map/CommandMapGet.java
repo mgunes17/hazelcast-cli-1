@@ -1,9 +1,11 @@
 package command.collection.map;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hazelcast.cli.CLI;
 import com.hazelcast.core.IMap;
 
 import command.collection.common.DecisionToCreate;
+import command.collection.common.FieldsOfObject;
 import command.collection.common.FindCollectionName;
 import joptsimple.OptionSet;
 
@@ -20,6 +22,8 @@ public class CommandMapGet {
 		}
 		
 		IMap map = CLI.instance.getMap(CLI.nameSpace); 
-		System.out.println(map.get(result.nonOptionArguments().get(0)));
+		FieldsOfObject.displayObjectFields(new ObjectMapper().
+				writeValueAsString(map.get(result.nonOptionArguments().get(0))));
+
 	}
 }

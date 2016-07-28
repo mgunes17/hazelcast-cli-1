@@ -21,7 +21,10 @@ europe1.port=22
 ```
 
 If you want to use classes in cluster which you connect, you need to create a jar file contains that classes and need to write jar path to properties file.
+
+```
 jar.path=/home/mgunes/test.jar 
+```
 
 ## SSH configuration
 
