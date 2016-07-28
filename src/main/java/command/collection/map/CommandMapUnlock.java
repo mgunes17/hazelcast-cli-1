@@ -3,6 +3,8 @@ package command.collection.map;
 import com.hazelcast.cli.CLI;
 import com.hazelcast.core.IMap;
 
+import command.collection.common.DecisionToCreate;
+import command.collection.common.FindCollectionName;
 import joptsimple.OptionSet;
 
 public class CommandMapUnlock {
@@ -11,6 +13,9 @@ public class CommandMapUnlock {
 		
 		if(CLI.nameSpace == null){
 			System.out.println("Please define namespace");
+			return;
+		} else if(!FindCollectionName.isExistCollectionName("map") &&
+				!DecisionToCreate.createDecision("map")) {
 			return;
 		}
 		

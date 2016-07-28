@@ -83,9 +83,7 @@ public class CLI {
     public static ClusterSettings settings;
     public static String nameSpace;
     public static HazelcastInstance instance = Hazelcast.newHazelcastInstance();
-    
-
-    
+        
     public static void main(String[] args) throws Exception {
         reader = new ConsoleReader();
         System.out.println((new HazelcastArt()).art);

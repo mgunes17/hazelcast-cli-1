@@ -2,18 +2,21 @@ package command.collection.list;
 
 import java.util.List;
 
-import javax.naming.spi.DirStateFactory.Result;
-
 import com.hazelcast.cli.CLI;
 
+import command.collection.common.DecisionToCreate;
+import command.collection.common.FindCollectionName;
 import joptsimple.OptionSet;
 
 public class CommandListAdd {
 
 	public static void apply(OptionSet result) throws Exception {
 		
-		if(CLI.nameSpace == null){
+		if(CLI.nameSpace == null) {
 			System.out.println("Please define namespace");
+			return;
+		} else if(!FindCollectionName.isExistCollectionName("list") &&
+				!DecisionToCreate.createDecision("list")) {
 			return;
 		}
 		
