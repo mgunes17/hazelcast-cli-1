@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 public class CommandOptions {
 	private static Logger logger = LoggerFactory.getLogger(CommandOptions.class);
+	
     static OptionParser optionParser = new OptionParser();
     static OptionSpec help = optionParser.acceptsAll(Arrays.asList("help", "h"));
     static OptionSpec exit = optionParser.acceptsAll(Arrays.asList("exit", "e"));

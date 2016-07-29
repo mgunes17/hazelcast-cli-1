@@ -10,13 +10,8 @@
     </encoder>
   </appender>
 
-  <root level="warn">
-      <appender-ref ref="FILE" />
-  </root>
   <root level="trace">
       <appender-ref ref="FILE" />
   </root>
-  <root level="info">
-      <appender-ref ref="FILE" />
-  </root>
+
 </configuration>

@@ -16,10 +16,12 @@ public class CommandAddHost {
         if (hostName == null) hostName = "";
         boolean hostNameExisting = false;
         while (hostName.equals("") || hostNameExisting) {
+        	logger.trace("Hostname is reading");
             hostName = reader.readLine("Please give a unique name to your remote host: ");
             hostNameExisting = false;
             for (HostSettings host : hosts) {
                 if (hostName.equals(host.hostName)) {
+                	logger.trace("Host name found");
                     hostNameExisting = true;
                 }
             }
@@ -65,6 +67,7 @@ public class CommandAddHost {
         Properties prop = new Properties();
         InputStream is = CLI.class.getClassLoader().getResourceAsStream("cli.properties");
         prop.load(is);
+        logger.trace("Properties file is reading");
         String userName = prop.getProperty(hostName + ".user");
         String hostIp = prop.getProperty(hostName + ".ip");
         String remotePath = prop.getProperty(hostName + ".remotePath");
@@ -76,7 +79,7 @@ public class CommandAddHost {
         System.out.println("Connection settings set for " + host.userName + "@" + host.hostIp);
         String message = SshExecutor.exec(host.userName, host.hostIp, 22, "", false, host.identityPath, false);
         if ((message == null) || (!message.equals("exception"))) {
-        	logger.info("Host is adding");
+        	logger.info("Message is null or not exception");
             System.out.println("Host " + host.hostName + " is added.");
             hosts.add(host);
         } else {

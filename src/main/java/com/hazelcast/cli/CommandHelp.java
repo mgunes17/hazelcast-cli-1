@@ -1,8 +1,14 @@
 package com.hazelcast.cli;
 
-public class CommandHelp {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+public class CommandHelp {
+	private static Logger logger = LoggerFactory.getLogger(CommandHelp.class);
+	
     public static void apply() {
+    	logger.trace("Help command");
+    	
         System.out.println(
                 "\n" +
                         "This command line interface is created for managing and provisioning of hazelcast clusters and members.\n" +

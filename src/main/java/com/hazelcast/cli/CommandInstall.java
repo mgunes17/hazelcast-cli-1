@@ -13,14 +13,14 @@ public class CommandInstall {
     public static void apply(OptionSet result, Set<HostSettings> machines) throws Exception {
 
         if (machines.size() == 0) {
-        	logger.info("There is no host");
+        	logger.trace("There is no host");
             System.out.println(
                     "You don't have any hosts configured.\n" +
                             "Please first add a host machine with the command '--add-machine'.");
             return;
         }
         if (result.nonOptionArguments().size() < 2) {
-        	logger.info("Missing parameters");
+        	logger.trace("Missing parameters");
             System.out.println("Please specify host name and version");
             System.out.println("Usage: install [host] [version]");
             System.out.println("Type help to see command options.");
@@ -31,9 +31,11 @@ public class CommandInstall {
         HostSettings machine = HostSettings.getMachine(result, machines, machineName);
 
         if (machine == null) {
+        	logger.trace("machine is null");
             return;
         }
 
+        logger.info("Reading machine info");
         String user = machine.userName;
         String hostIp = machine.hostIp;
         int port = machine.sshPort;
@@ -48,6 +50,7 @@ public class CommandInstall {
         String extractCommand = buildCommandExtract(remotePath);
         SshExecutor.exec(user, hostIp, port, extractCommand, false, identityPath, false);
 
+        logger.info("Ssh is executing");
         String move = buildCommandMove(remotePath + "/hazelcast-" + strVersion, remotePath + "/hazelcast-all");
         SshExecutor.exec(user, hostIp, port, move, false, identityPath, false);
         SshExecutor.exec(user, hostIp, port, "mkdir " + remotePath + "/hazelcast", false, identityPath, false);
@@ -69,6 +72,7 @@ public class CommandInstall {
 //    http://download.hazelcast.com/download.jsp?version=hazelcast-3.6-EA3&p=153008119
 
     private static String buildCommandDownload(String version, String path) {
+    	logger.trace("Buil command download");
         String url = HZ_DOWNLOAD_URL.replace("#version#", version);
         //for osx curl -o /Users/mefeakengin/hazelcast/hazelcast.tar.gz 'http://download.hazelcast.com/download.jsp?version=hazelcast-3.5.4&type=tar&p=153008119'
 //        return "curl -o ~/hazelcast/hazelcast" + ".tar.gz "  + url;
@@ -76,10 +80,12 @@ public class CommandInstall {
     }
 
     private static String buildCommandExtract(String path) {
+    	logger.trace("Build command Extract");
         return "tar -zxvf " + path + "/hazelcast" + ".tar.gz";
     }
 
     private static String buildCommandMove(String original, String target) {
+    	logger.trace("Build command move");
         return "cp -r " + original + " " + target;
     }
 

@@ -12,7 +12,7 @@ public class CommandClusterChangeState {
     public static void apply(OptionSet result, ClusterSettings properties) throws Exception {
 
         if (!ControlUtil.checkCredentials()) {
-        	logger.info("checkCredentials in false");
+        	logger.info("Credentials are false");
             return;
         }
 
@@ -40,6 +40,7 @@ public class CommandClusterChangeState {
     }
 
     private static String buildCommandChangeClusterState(String hostIp, String clusterPort, String groupName, String password, String stateParam) {
+    	logger.trace("Build command change cluster state");
         //default: curl --data "dev&dev-pass&active" http://127.0.0.1:5701/hazelcast/rest/management/cluster/changeState
         return "curl --data \"" + groupName + "&" + password + "&" + stateParam + "\" http://127.0.0.1" + ":" + clusterPort + "/hazelcast/rest/management/cluster/changeState";
     }

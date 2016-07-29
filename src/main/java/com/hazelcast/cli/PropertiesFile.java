@@ -28,7 +28,7 @@ public class PropertiesFile {
 			properties.load(new FileInputStream(propertiesFileName));
 		}
 		catch(IOException e){
-			logger.warn(e.getMessage());
+			logger.warn("", e);
 			e.getMessage();
 		}
 
@@ -45,7 +45,7 @@ public class PropertiesFile {
 			return ucl;
 		}
 		catch(MalformedURLException e){
-			logger.warn(e.getMessage());
+			logger.warn("", e);
 			e.getMessage();
 		}
 		

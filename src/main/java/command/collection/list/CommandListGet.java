@@ -19,10 +19,12 @@ public class CommandListGet {
 	public static void apply(OptionSet result) throws Exception{
 		
 		if(CLI.nameSpace == null){
+			logger.trace("Namespace is null");
 			System.out.println("Please define namespace");
 			return;
 		} else if(!FindCollectionName.isExistCollectionName("list") &&
 				!DecisionToCreate.createDecision("list")) {
+			logger.trace("There is no list named " + CLI.nameSpace + " and not created");
 			return;
 		}
 		

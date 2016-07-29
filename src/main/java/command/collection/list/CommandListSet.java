@@ -17,10 +17,12 @@ public class CommandListSet {
 	public static void apply(OptionSet result) throws Exception{
 		
 		if(CLI.nameSpace == null){
+			logger.trace("Namespace is null");
 			System.out.println("Please define namespace");
 			return;
 		} else if(!FindCollectionName.isExistCollectionName("list") &&
 				!DecisionToCreate.createDecision("list")) {
+			logger.trace("There is no list named " + CLI.nameSpace + " and not created");
 			return;
 		}
 		
@@ -28,6 +30,7 @@ public class CommandListSet {
 		
 		try {
 			list.set((Integer.valueOf((String)result.nonOptionArguments().get(0))), result.nonOptionArguments().get(1));
+			logger.trace("list set is OK");
 		} catch(IndexOutOfBoundsException e) {
 			logger.warn("Index is invalid", e);
 			System.out.println("Index is invalid");

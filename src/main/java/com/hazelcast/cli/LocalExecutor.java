@@ -11,6 +11,7 @@ public class LocalExecutor {
 	
     public static String exec(String command, boolean breakProcess) throws Exception {
 
+    	logger.trace("Command splitting");
         String[] commandSplit = command.split(" ");
         ProcessBuilder pb = new ProcessBuilder(commandSplit);
         pb.redirectErrorStream(true);
@@ -20,6 +21,7 @@ public class LocalExecutor {
         String response = null;
 
         try {
+        	logger.trace("shell operations");
             Process shell = pb.start();
             shell.waitFor();
 
@@ -32,6 +34,7 @@ public class LocalExecutor {
             String msg = null;
             String out = null;
             while ((msg = in.readLine()) != null) {
+            	logger.trace("More message");
                 out = msg;
                 System.out.println("Message: " + msg);
                 //How does the breakProcess work?
@@ -51,6 +54,7 @@ public class LocalExecutor {
 //
 //                response = java.io.streaconvertStreamToStr(shellIn);
 
+                logger.trace("shellIn closing");
                 shellIn.close();
 //            }
 

@@ -19,6 +19,7 @@ public class CommandRemoveHost {
             for (HostSettings machine : machines) {
                 if(machine.hostName.equals(machineName)) {
                     machines.remove(machine);
+                    logger.trace("Machine has been removed");
                     machineRemoved = true;
                     break;
                 }
@@ -26,9 +27,11 @@ public class CommandRemoveHost {
 
             if (!machineRemoved) {
                 if (machineName == null) {
+                	logger.trace("Machine name is invalid");
                     System.out.println(
                             "Please enter a valid machine name.");
                 } else {
+                	logger.trace("Machine with the name '" + machineName + "' does not exist.");
                     System.out.println(
                             "Machine with the name '" + machineName + "' does not exist.");
                 }

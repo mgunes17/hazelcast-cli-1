@@ -17,10 +17,12 @@ public class CommandQueueOffer {
 	public static void apply(OptionSet result) throws Exception {
 		
 		if(CLI.nameSpace == null){
-			System.out.println("Please define namespace");
+			logger.trace("Namespace is null");
+			System.out.println("Please define a namespace");
 			return;
 		} else if(!FindCollectionName.isExistCollectionName("queue") &&
 				!DecisionToCreate.createDecision("queue")) {
+			logger.trace("There is no queue named " + CLI.nameSpace + " and not created");
 			return;
 		}
 		
@@ -28,6 +30,7 @@ public class CommandQueueOffer {
 		
 		try {
 			queue.offer(result.nonOptionArguments().get(0));
+			logger.trace("Offering " + result.nonOptionArguments().get(0));
 			System.out.println(true);
 		} catch( IndexOutOfBoundsException e) {
 			logger.warn("Offer value is null", e);

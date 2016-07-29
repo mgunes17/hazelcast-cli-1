@@ -11,7 +11,6 @@ import com.hazelcast.core.IMap;
 import command.collection.common.DecisionToCreate;
 import command.collection.common.FieldsOfObject;
 import command.collection.common.FindCollectionName;
-import command.collection.list.CommandListSet;
 import joptsimple.OptionSet;
 
 public class CommandMapGet {
@@ -20,10 +19,12 @@ public class CommandMapGet {
 	public static void apply(OptionSet result) throws Exception {
 		
 		if(CLI.nameSpace == null){
-			System.out.println("Please define namespace");
+			logger.trace("Namespace is null");
+			System.out.println("Please define a namespace");
 			return;
 		} else if(!FindCollectionName.isExistCollectionName("map") &&
 				!DecisionToCreate.createDecision("map")) {
+			logger.trace("There is no map named " + CLI.nameSpace + " and not created");
 			return;
 		}
 		

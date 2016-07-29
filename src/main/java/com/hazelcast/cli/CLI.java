@@ -313,6 +313,7 @@ public class CLI {
         Enumeration it = prop.propertyNames();
         
         while (it.hasMoreElements()) {
+        	logger.trace("Properties file has more elements");
             String token = (String) it.nextElement();
             String key = token.split("\\.")[0];
             String value = token.split("\\.")[1];
@@ -321,6 +322,7 @@ public class CLI {
         }
 
         for (String key : set) {
+        	logger.trace("Key is reading from Properties File");
             String userName = hashMap.get(key + ".user");
             String hostIp = hashMap.get(key + ".ip");
             String remotePath = hashMap.get(key + ".remotePath");
@@ -330,9 +332,11 @@ public class CLI {
             System.out.println("Connection settings set for " + host.userName + "@" + host.hostIp);
             String message = SshExecutor.exec(host.userName, host.hostIp, 22, "", false, host.identityPath, false);
             if ((message == null) || (!message.equals("exception"))) {
+            	logger.trace("Message is null or not exception");
                 System.out.println("Host " + host.hostName + " is added.");
                 hosts.add(host);
             } else {
+            	logger.trace("Could not connect to the hosts");
                 System.out.println("Could not connect to the hosts.");
                 System.out.println("Please try to add a hosts again.");
             }

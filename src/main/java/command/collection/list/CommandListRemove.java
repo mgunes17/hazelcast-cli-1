@@ -18,10 +18,12 @@ public class CommandListRemove {
 	public static void apply(OptionSet result) throws Exception{
 		
 		if(CLI.nameSpace == null){
+			logger.trace("Namespace is null");
 			System.out.println("Please define namespace");
 			return;
 		} else if(!FindCollectionName.isExistCollectionName("list") &&
 				!DecisionToCreate.createDecision("list")) {
+			logger.trace("There is no list named " + CLI.nameSpace + " and not created");
 			return;
 		}
 		
@@ -33,6 +35,7 @@ public class CommandListRemove {
 		
 		if(decision.equalsIgnoreCase("y")){
 			if(!list.contains(result.nonOptionArguments().get(0))) {
+				logger.trace(result.nonOptionArguments().get(0) + " is not exist");
 				System.out.println(result.nonOptionArguments().get(0) + " is not exist");
 			} else {
 				try {
@@ -44,6 +47,7 @@ public class CommandListRemove {
 				}
 			}
 		} else {
+			logger.trace("NOT removed");
 			System.out.println("NOT Removed");
 		}		
 		

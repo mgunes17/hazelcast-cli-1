@@ -22,7 +22,7 @@ public class ClusterSettings {
     public String memberPort;
 
     public ClusterSettings() {
-    	logger.info("ClusterSettings object is initializing");
+    	logger.trace("ClusterSettings object is initializing");
         this.port = 22;
         this.isConnectedToCluster = false;
     }

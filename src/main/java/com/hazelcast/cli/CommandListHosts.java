@@ -2,10 +2,14 @@ package com.hazelcast.cli;
 
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class CommandListHosts {
-
+	private static Logger logger = LoggerFactory.getLogger(CommandListHosts.class);
+	
     public static void apply (Set<HostSettings> machines) throws Exception {
-
+    		logger.trace("Host Settings");
             for (HostSettings machine: machines)
                 System.out.println(
                         "\n" +

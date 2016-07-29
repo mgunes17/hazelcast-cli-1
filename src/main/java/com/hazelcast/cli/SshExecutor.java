@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SshExecutor {
-	private static Logger logger = LoggerFactory.getLogger(CLI.class);
+	private static Logger logger = LoggerFactory.getLogger(SshExecutor.class);
 	
     public static String exec(String user, String host, int port, String command, boolean breakProcess, String identityPath, boolean shouldPrint) throws Exception {
 
@@ -34,6 +34,8 @@ public class SshExecutor {
             session.connect();
 
             int lineCounter = 0;
+            
+            logger.trace("channel is opening");
 
             channel = (ChannelExec) session.openChannel("exec");
             channel.setPty(false);
@@ -46,6 +48,7 @@ public class SshExecutor {
 
             String out = "";
             while ((msg = in.readLine()) != null) {
+            	logger.trace("More message");
                 if (shouldPrint) {
                     System.out.println(msg);
                 }
@@ -78,11 +81,14 @@ public class SshExecutor {
             System.out.println("Connection cannot be established. Please try again.");
             return "exception";
         } finally {
-            if (channel != null)
+            if (channel != null){
                 channel.disconnect();
-
-            if (session != null)
-                session.disconnect();
+                logger.trace("Channel is disconnected");
+            }
+            if (session != null){
+            	session.disconnect();
+            	logger.trace("Session is disconnected");
+            }            
         }
     }
 
