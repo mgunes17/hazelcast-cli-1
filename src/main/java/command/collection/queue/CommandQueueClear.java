@@ -1,12 +1,12 @@
 package command.collection.queue;
 
 import java.util.Queue;
-import java.util.Scanner;
 
 import com.hazelcast.cli.CLI;
 
 import command.collection.common.DecisionToCreate;
 import command.collection.common.FindCollectionName;
+import jline.console.ConsoleReader;
 
 public class CommandQueueClear {
 
@@ -23,14 +23,13 @@ public class CommandQueueClear {
 		Queue<Object> queue = CLI.instance.getQueue(CLI.nameSpace); 
 		
 		System.out.println("Are you sure you want to clear the queue?(y/n");
-		Scanner in = new Scanner(System.in);
-		String decision = in.nextLine();
+		ConsoleReader reader = new ConsoleReader();
+		String decision = reader.readLine();
 		
 		if(decision.equalsIgnoreCase("y")){
 			queue.clear();
 			System.out.println("Clear is OK");
-		}
-		else{
+		} else {
 			System.out.println("NOT Cleared");
 		}
 

@@ -1,12 +1,12 @@
 package command.collection.list;
 
 import java.util.List;
-import java.util.Scanner;
 
 import com.hazelcast.cli.CLI;
 
 import command.collection.common.DecisionToCreate;
 import command.collection.common.FindCollectionName;
+import jline.console.ConsoleReader;
 
 public class CommandListClear {
 
@@ -21,15 +21,15 @@ public class CommandListClear {
 		}
 		
 		List<Object> list = CLI.instance.getList(CLI.nameSpace); 
+		
 		System.out.println("Are you sure you want to clear the list? (y/n)");
-		Scanner in = new Scanner(System.in);
-		String decision = in.nextLine();
+		ConsoleReader reader = new ConsoleReader();
+		String decision = reader.readLine();
 		
 		if(decision.equalsIgnoreCase("y")){
 			list.clear();
 			System.out.println("Clear is OK");
-		}
-		else{
+		} else {
 			System.out.println("NOT Cleared");
 		}
 

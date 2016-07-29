@@ -1,12 +1,11 @@
 package command.collection.map;
 
-import java.util.Map;
-import java.util.Scanner;
-
 import com.hazelcast.cli.CLI;
+import com.hazelcast.core.IMap;
 
 import command.collection.common.DecisionToCreate;
 import command.collection.common.FindCollectionName;
+import jline.console.ConsoleReader;
 
 public class CommandMapClear {
 	
@@ -20,18 +19,16 @@ public class CommandMapClear {
 			return;
 		}
 		
-		Map map = CLI.instance.getMap(CLI.nameSpace);
+		IMap<Object, Object> map = CLI.instance.getMap(CLI.nameSpace);
 
-		
 		System.out.println("Are you sure you want to clear the map?(y/n");
-		Scanner in = new Scanner(System.in);
-		String decision = in.nextLine();
+		ConsoleReader reader = new ConsoleReader();
+		String decision = reader.readLine();
 		
 		if(decision.equalsIgnoreCase("y")){
 			map.clear();
 			System.out.println("Clear is OK");
-		}
-		else{
+		} else {
 			System.out.println("NOT Cleared");
 		}
 			

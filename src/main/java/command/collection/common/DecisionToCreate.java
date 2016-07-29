@@ -1,8 +1,8 @@
 package command.collection.common;
 
-import java.util.Scanner;
-
 import com.hazelcast.cli.CLI;
+
+import jline.console.ConsoleReader;
 
 public class DecisionToCreate {
 	
@@ -11,13 +11,14 @@ public class DecisionToCreate {
 		System.out.println("There is no "+ collectionType + " named "+ CLI.nameSpace);
 		System.out.println("Would you like to create? (y/n)");
 		
-		@SuppressWarnings("resource")
-		Scanner in = new Scanner(System.in);
-		String decision = in.nextLine();
+		ConsoleReader reader = new ConsoleReader();
+		String decision = reader.readLine();
 		
-		if(decision.equalsIgnoreCase("y"))
+		if(decision.equalsIgnoreCase("y")) {
 			return true;
-		else
+		} else {
 			return false;
+		}
+			
 	}
 }

@@ -1,9 +1,10 @@
 package command.collection.set;
 
-import java.util.Scanner;
 import java.util.Set;
 
 import com.hazelcast.cli.CLI;
+
+import jline.console.ConsoleReader;
 
 public class CommandSetClear {
 
@@ -17,14 +18,13 @@ public class CommandSetClear {
 		Set<Object> set = CLI.instance.getSet(CLI.nameSpace);
 		
 		System.out.println("Are you sure you want to clear the set?(y/n");
-		Scanner in = new Scanner(System.in);
-		String decision = in.nextLine();
+		ConsoleReader reader = new ConsoleReader();
+		String decision = reader.readLine();
 		
 		if(decision.equalsIgnoreCase("y")){
 			set.clear();
 			System.out.println("Clear is OK");
-		}
-		else{
+		} else {
 			System.out.println("NOT Cleared");
 		}
 
