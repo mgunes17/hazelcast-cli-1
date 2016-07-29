@@ -2,6 +2,14 @@
 
 hazelcast-cli is a Hazelcast management tool, a command line interface to install, configure, and upgrade Hazelcast on the local machine or cloud from any operating system.
 
+# Building the project
+
+You can use build.sh file to build.
+
+#Running the project
+
+You can use start.sh file to run.
+
 # Installation
 
 Run the following command to install hazelcast-cli: 
